@@ -82,194 +82,182 @@ export default function HomePage() {
   const toggleSubcategory = () => setSubcategoryOpen(!subcategoryOpen);
 
   return (
-    <div className="homepage-container container mx-auto p-8 min-h-screen">
-      <motion.h1
-        className="text-5xl font-extrabold text-center text-gray-800 mb-12 tracking-tight"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 1 }}
-      >
-        Product List
-      </motion.h1>
+<div className="homepage-container container mx-auto py-4 sm:py-8 min-h-screen">
+  {/* <motion.h1
+    className="text-3xl sm:text-5xl font-extrabold text-center text-gray-800 mb-8 sm:mb-12 tracking-tight"
+    initial={{ opacity: 0 }}
+    animate={{ opacity: 1 }}
+    transition={{ duration: 1 }}
+  >
+    Product List
+  </motion.h1> */}
 
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
-        {/* Filter Sidebar */}
-        <motion.aside
-          className="col-span-1 bg-white p-8 rounded-xl shadow-lg sticky top-8"
-          variants={containerVariants}
-          initial="hidden"
-          animate="visible"
+  <div className="grid grid-cols-1 lg:grid-cols-4 gap-8 relative">
+    {/* Filter Sidebar */}
+    <motion.aside
+      className="col-span-1 bg-white p-6 sm:p-8 rounded-xl shadow-lg lg:sticky top-8 z-10 lg:z-auto"
+      variants={containerVariants}
+      initial="hidden"
+      animate="visible"
+      style={{ minWidth: "100%" }} // Ensure full width on small screens
+    >
+      <h2 className="text-2xl sm:text-3xl font-bold mb-6 text-gray-800">Filters</h2>
+
+      {/* Category Filter */}
+      <div className="mb-6">
+        <button
+          onClick={toggleCategory}
+          className="flex items-center justify-between w-full text-lg font-semibold text-gray-600 mb-2 focus:outline-none"
         >
-          <h2 className="text-3xl font-bold mb-8 text-gray-800">Filters</h2>
-
-          {/* Category Filter */}
-          <div className="mb-8">
-            <button
-              onClick={toggleCategory}
-              className="flex items-center justify-between w-full text-lg font-semibold text-gray-600 mb-2 focus:outline-none"
-            >
-              Filter by Category
-              {categoryOpen ? (
-                <ChevronUpIcon className="h-6 w-6 text-gray-500" />
-              ) : (
-                <ChevronDownIcon className="h-6 w-6 text-gray-500" />
-              )}
-            </button>
-            {categoryOpen && (
-              <div className="space-y-4 pl-4">
-                {['All', ...uniqueCategories].map((category, index) => (
-                  <div key={index} className="flex items-center">
-                    <input
-                      id={`filter-category-${index}`}
-                      name="category"
-                      type="checkbox"
-                      value={category}
-                      checked={selectedCategory === category}
-                      onChange={() => {
-                        setSelectedCategory(category);
-                        setSelectedSubcategory('All');
-                      }}
-                      className="h-5 w-5 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
-                    />
-                    <label
-                      htmlFor={`filter-category-${index}`}
-                      className="ml-3 text-lg text-gray-600 capitalize"
-                    >
-                      {category}
-                    </label>
-                  </div>
-                ))}
-              </div>
-            )}
-          </div>
-
-          {/* Subcategory Filter */}
-          <div className="mb-8">
-            <button
-              onClick={toggleSubcategory}
-              className="flex items-center justify-between w-full text-lg font-semibold text-gray-600 mb-2 focus:outline-none"
-            >
-              Filter by Subcategory
-              {subcategoryOpen ? (
-                <ChevronUpIcon className="h-6 w-6 text-gray-500" />
-              ) : (
-                <ChevronDownIcon className="h-6 w-6 text-gray-500" />
-              )}
-            </button>
-            {subcategoryOpen && (
-              <div className="space-y-4 pl-4">
-                {['All', ...uniqueSubcategories].map((subcategory, index) => (
-                  <div key={index} className="flex items-center">
-                    <input
-                      id={`filter-subcategory-${index}`}
-                      name="subcategory"
-                      type="checkbox"
-                      value={subcategory}
-                      checked={selectedSubcategory === subcategory}
-                      onChange={() => setSelectedSubcategory(subcategory)}
-                      className="h-5 w-5 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
-                    />
-                    <label
-                      htmlFor={`filter-subcategory-${index}`}
-                      className="ml-3 text-lg text-gray-600 capitalize"
-                    >
-                      {subcategory}
-                    </label>
-                  </div>
-                ))}
-              </div>
-            )}
-          </div>
-        </motion.aside>
-
-        {/* Product Grid */}
-        <div className="col-span-3 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-10">
-          {filteredProducts.map((product) => {
-            // Calculate sale price
-            const salePrice = product.price - (product.price * product.sale) / 100;
-
-            return (
-              <motion.div
-                key={product._id}
-                className="product-card bg-white rounded-xl shadow-lg hover:shadow-2xl transition-all transform hover:-translate-y-2 hover:scale-105 relative"
-                variants={productVariants}
-                initial="hidden"
-                animate="visible"
-                whileHover={{ scale: 1.05 }}
-              >
-                <div className="relative">
-                  {/* Product Image */}
-                  <img
-                    src={product.image}
-                    alt={product.name}
-                    className="product-image w-full h-60 object-fill rounded-t-xl cursor-pointer hover:opacity-90 transition-opacity"
-                    onClick={() => handleProductClick(product._id)}
-                  />
-                  {/* Sale Badge - Conditionally Rendered */}
-                  {product.sale > 0 && (
-                    <span className="absolute top-3 right-3 bg-yellow-500 text-white text-sm font-semibold px-2 py-1 rounded-full">
-                      {product.sale}% OFF {/* Display sale percentage */}
-                    </span>
-                  )}
-                </div>
-
-
-                {/* Product Details */}
-                <div className="px-6">
-                  <h2 className="product-name text-2xl font-bold mt-2 text-gray-800 tracking-tight">
-                    {product.name}
-                  </h2>
-                  <p className="product-category text-gray-500">
-                    Category: <span className="text-gray-800">{product.category}</span>
-                  </p>
-
-                  {/* Price Section */}
-                  <div className="flex items-center space-x-2 mt-2">
-                    {product.sale > 0 ? (
-                      <>
-                        {/* Original Price with Strikethrough */}
-                        <p className="text-gray-400 line-through">  
-                          ${product.price.toFixed(2)} {/* Original price */}
-                        </p>
-
-                        {/* Discounted Sale Price */}
-                        <p className="text-lg font-semibold text-yellow-500">
-                          ${salePrice.toFixed(2)} {/* Sale price */}
-                        </p>
-                      </>
-                    ) : (
-                      /* Display Original Price Only (No Sale) */
-                      <p className="text-lg font-semibold text-gray-800">
-                        ${product.price.toFixed(2)}
-                      </p>
-                    )}
-                  </div>
-
-
-                  {/* Rating */}
-                  <div className="product-rating flex items-center space-x-1 mt-2">
-                    {renderStars(calculateAverageRating(product.ratings))}
-                    <span className="text-sm text-gray-600">({product.ratings.length})</span>
-                  </div>
-                </div>
-
-                {/* Add to Cart Button */}
-                <button
-                  onClick={() => handleAddToCart(product)}
-                  className="text-white w-full mt-6 font-semibold py-3 px-8 rounded-b-lg shadow-lg bg-gradient-to-r from-yellow-500 to-yellow-600 
-            hover:from-yellow-600 hover:to-yellow-700 hover:text-gray-900 transition-transform transform hover:scale-105 
-            focus:outline-none focus:ring-4 focus:ring-yellow-300"
+          Filter by Category
+          {categoryOpen ? (
+            <ChevronUpIcon className="h-6 w-6 text-gray-500" />
+          ) : (
+            <ChevronDownIcon className="h-6 w-6 text-gray-500" />
+          )}
+        </button>
+        {categoryOpen && (
+          <div className="space-y-4 pl-4">
+            {['All', ...uniqueCategories].map((category, index) => (
+              <div key={index} className="flex items-center">
+                <input
+                  id={`filter-category-${index}`}
+                  name="category"
+                  type="checkbox"
+                  value={category}
+                  checked={selectedCategory === category}
+                  onChange={() => {
+                    setSelectedCategory(category);
+                    setSelectedSubcategory('All');
+                  }}
+                  className="h-5 w-5 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
+                />
+                <label
+                  htmlFor={`filter-category-${index}`}
+                  className="ml-3 text-lg text-gray-600 capitalize"
                 >
-                  Add to Cart
-                </button>
-              </motion.div>
-            );
-          })}
-        </div>
-
-
+                  {category}
+                </label>
+              </div>
+            ))}
+          </div>
+        )}
       </div>
+
+      {/* Subcategory Filter */}
+      <div className="mb-6">
+        <button
+          onClick={toggleSubcategory}
+          className="flex items-center justify-between w-full text-lg font-semibold text-gray-600 mb-2 focus:outline-none"
+        >
+          Filter by Subcategory
+          {subcategoryOpen ? (
+            <ChevronUpIcon className="h-6 w-6 text-gray-500" />
+          ) : (
+            <ChevronDownIcon className="h-6 w-6 text-gray-500" />
+          )}
+        </button>
+        {subcategoryOpen && (
+          <div className="space-y-4 pl-4">
+            {['All', ...uniqueSubcategories].map((subcategory, index) => (
+              <div key={index} className="flex items-center">
+                <input
+                  id={`filter-subcategory-${index}`}
+                  name="subcategory"
+                  type="checkbox"
+                  value={subcategory}
+                  checked={selectedSubcategory === subcategory}
+                  onChange={() => setSelectedSubcategory(subcategory)}
+                  className="h-5 w-5 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
+                />
+                <label
+                  htmlFor={`filter-subcategory-${index}`}
+                  className="ml-3 text-lg text-gray-600 capitalize"
+                >
+                  {subcategory}
+                </label>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+    </motion.aside>
+
+    {/* Product Grid */}
+    <div className="col-span-1 lg:col-span-3 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-10">
+      {filteredProducts.map((product) => {
+        const salePrice = product.price - (product.price * product.sale) / 100;
+
+        return (
+          <motion.div
+            key={product._id}
+            className="product-card bg-white rounded-xl shadow-lg hover:shadow-2xl transition-all transform hover:-translate-y-2 hover:scale-105 relative"
+            variants={productVariants}
+            initial="hidden"
+            animate="visible"
+            whileHover={{ scale: 1.05 }}
+          >
+            <div className="relative">
+              {/* Product Image */}
+              <img
+                src={product.image}
+                alt={product.name}
+                className="product-image w-full h-60 object-cover rounded-t-xl cursor-pointer hover:opacity-90 transition-opacity"
+                onClick={() => handleProductClick(product._id)}
+              />
+              {product.sale > 0 && (
+                <span className="absolute top-3 right-3 bg-yellow-500 text-white text-sm font-semibold px-2 py-1 rounded-full">
+                  {product.sale}% OFF
+                </span>
+              )}
+            </div>
+
+            <div className="px-4 sm:px-6">
+              <h2 className="product-name text-xl sm:text-2xl font-bold mt-2 text-gray-800 tracking-tight">
+                {product.name}
+              </h2>
+              <p className="product-category text-gray-500">
+                Category: <span className="text-gray-800">{product.category}</span>
+              </p>
+
+              <div className="flex items-center space-x-2 mt-2">
+                {product.sale > 0 ? (
+                  <>
+                    <p className="text-gray-400 line-through">
+                      ${product.price.toFixed(2)}
+                    </p>
+                    <p className="text-lg font-semibold text-yellow-500">
+                      ${salePrice.toFixed(2)}
+                    </p>
+                  </>
+                ) : (
+                  <p className="text-lg font-semibold text-gray-800">
+                    ${product.price.toFixed(2)}
+                  </p>
+                )}
+              </div>
+
+              <div className="product-rating flex items-center space-x-1 mt-2">
+                {renderStars(calculateAverageRating(product.ratings))}
+                <span className="text-sm text-gray-600">({product.ratings.length})</span>
+              </div>
+            </div>
+
+            <button
+              onClick={() => handleAddToCart(product)}
+              className="text-white w-full mt-6 font-semibold py-3 px-8 rounded-b-lg shadow-lg bg-gradient-to-r from-yellow-500 to-yellow-600 
+              hover:from-yellow-600 hover:to-yellow-700 hover:text-gray-900 transition-transform transform hover:scale-105 
+              focus:outline-none focus:ring-4 focus:ring-yellow-300"
+            >
+              Add to Cart
+            </button>
+          </motion.div>
+        );
+      })}
     </div>
+  </div>
+</div>
+
 
   );
 }

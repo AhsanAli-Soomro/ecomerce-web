@@ -32,7 +32,7 @@ export default function RootLayout({ children }) {
           <ProductProvider>
             <CartProvider>
               <Navbar />
-              <div className=" bg-gray-100 pt-24">
+              <div className=" bg-gray-100 px-4 pt-28">
                 {children}
               </div>
               <Footer/>

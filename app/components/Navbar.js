@@ -46,7 +46,7 @@ export default function Navbar() {
 
   return (
     <>
-      <div className='fixed z-10 w-full'>
+      <div className='fixed z-20 w-full'>
         {/* Main Navbar */}
         <nav className="navbar bg-white shadow-lg p-4">
           <div className="container mx-auto flex justify-between items-center">
