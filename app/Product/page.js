@@ -5,6 +5,7 @@ import { useCart } from '../../contexts/CartContext';
 import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
 import { ChevronDownIcon, ChevronUpIcon } from '@heroicons/react/20/solid';
+import Image from 'next/image';
 
 
 export default function HomePage() {
@@ -199,7 +200,9 @@ export default function HomePage() {
           >
             <div className="relative">
               {/* Product Image */}
-              <img
+              <Image
+              width={500}
+              height={100}
                 src={product.image}
                 alt={product.name}
                 className="product-image w-full h-60 object-cover rounded-t-xl cursor-pointer hover:opacity-90 transition-opacity"

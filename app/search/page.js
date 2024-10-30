@@ -3,6 +3,7 @@ import { useSearchParams } from 'next/navigation'; // Hook to get search params
 import { useProducts } from '../../contexts/ProductContext';
 import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
+import Image from 'next/image';
 
 export default function SearchPage() {
   const searchParams = useSearchParams(); // Get search query from URL
@@ -40,7 +41,9 @@ export default function SearchPage() {
               initial="hidden"
               animate="visible"
             >
-              <img
+              <Image
+                width={500}
+                height={100}
                 src={product.image}
                 alt={product.name}
                 className="w-full h-60 object-cover rounded-md cursor-pointer hover:opacity-90"

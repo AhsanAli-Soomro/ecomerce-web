@@ -1,16 +1,17 @@
 'use client';
 import { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import { useProducts } from '../../contexts/ProductContext'; // Import the ProductContext
 
 export default function AdminPage() {
   const { products, addProduct, updateProduct, deleteProduct } = useProducts(); // Use context functions
-
+  const router = useRouter();
   const [product, setProduct] = useState({
     name: '',
     category: '',
     subcategory: '',
     price: '',
-    sale:'',
+    sale: '',
     description: '',
     image: '',
   });
@@ -19,6 +20,13 @@ export default function AdminPage() {
   const [loading, setLoading] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [editProductId, setEditProductId] = useState(null);
+
+  useEffect(() => {
+    const isLoggedIn = localStorage.getItem('isAdminLoggedIn'); // Check login status
+    if (!isLoggedIn) {
+      router.push('/adminlogin'); // Redirect to login page if not logged in
+    }
+  }, [router]);
 
   const handleInputChange = (e) => {
     setProduct({ ...product, [e.target.name]: e.target.value });
@@ -55,7 +63,7 @@ export default function AdminPage() {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    if (!product.name || !product.category || !product.subcategory || !product.price || !product.sale || !product.image) {
+    if (!product.name || !product.category || !product.subcategory || !product.price || !product.image) {
       setMessage('All fields are required');
       return;
     }
@@ -69,7 +77,7 @@ export default function AdminPage() {
     }
 
     // Reset form state
-    setProduct({ name: '', category: '', subcategory: '', price: '', sale:'', description: '', image: '' });
+    setProduct({ name: '', category: '', subcategory: '', price: '', sale: '', description: '', image: '' });
     setIsEditing(false);
     setEditProductId(null);
   };
@@ -81,7 +89,7 @@ export default function AdminPage() {
   };
 
   const handleCancelEdit = () => {
-    setProduct({ name: '', subcategory: '', category: '', subcategory: '', price: '', sale:'', description: '', image: '' });
+    setProduct({ name: '', subcategory: '', category: '', subcategory: '', price: '', sale: '', description: '', image: '' });
     setIsEditing(false);
     setEditProductId(null);
   };
@@ -91,8 +99,30 @@ export default function AdminPage() {
     setMessage('Product deleted successfully!');
   };
 
+  const handleChangePassword = () => {
+    router.push('/adminlogin?step=update'); // Redirect to update credentials step
+  };
+
   return (
     <div className="min-h-screen p-8">
+      <div className="flex items-center justify-end w-full gap-4">
+        <button
+          onClick={handleChangePassword}
+          className="mt-6 text-gray-700 hover:text-red-600 font-semibold transition-transform transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-red-300"
+        >
+          Change Password
+        </button>
+        <button
+          onClick={() => {
+            localStorage.removeItem('isAdminLoggedIn'); // Clear login state
+            router.push('/adminlogin'); // Redirect to login page
+          }}
+          className="mt-6 bg-red-500 hover:bg-red-600 text-white px-6 py-3 rounded-md font-semibold shadow-md transition-transform transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-red-300"
+        >
+          Logout
+        </button>
+      </div>
+
       <div className="max-w-4xl mx-auto bg-white p-6 shadow-md rounded-md">
         {/* Header */}
         <h1 className="text-2xl font-bold mb-4 text-center">

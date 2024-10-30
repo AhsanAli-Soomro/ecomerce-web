@@ -3,6 +3,7 @@ import { useCart } from '../../contexts/CartContext';
 import { useRouter } from 'next/navigation';
 import { useAuth, useUser, SignInButton } from '@clerk/nextjs';
 import { useEffect, useState } from 'react';
+import Image from 'next/image';
 
 export default function CartComponent() {
   const { cart, dispatch } = useCart();
@@ -123,7 +124,9 @@ export default function CartComponent() {
               className="cart-item flex flex-col sm:flex-row items-center sm:items-start justify-between bg-gray-100 p-4 rounded-md"
             >
               <div className="flex items-center space-x-4 mb-4 sm:mb-0">
-                <img
+                <Image
+                width={200}
+                height={100}
                   src={item.image}
                   alt={item.name}
                   className="w-32 h-32 sm:w-24 sm:h-24 object-cover rounded-md"

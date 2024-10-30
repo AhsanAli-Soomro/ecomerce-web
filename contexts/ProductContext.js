@@ -1,5 +1,6 @@
 'use client';
 import { createContext, useContext, useReducer, useEffect } from 'react';
+import Cookies from 'js-cookie'; // Import js-cookie
 
 // Create ProductContext
 const ProductContext = createContext();
@@ -26,22 +27,32 @@ const productReducer = (state, action) => {
 export const ProductProvider = ({ children }) => {
   const [products, dispatch] = useReducer(productReducer, []);
 
-  // Fetch products on mount
+  // Fetch products from API or cookies
   useEffect(() => {
-    console.log('Fetching products...');
-    const fetchProducts = async () => {
-      try {
-        const res = await fetch('/api/products');
-        const data = await res.json();
-        console.log('Fetched products:', data);
-        dispatch({ type: 'SET_PRODUCTS', payload: data });
-      } catch (error) {
-        console.error('Failed to fetch products:', error);
-      }
-    };
-    fetchProducts();
+    const storedProducts = Cookies.get('products'); // Check if products exist in cookies
+
+    if (storedProducts) {
+      console.log('Loading products from cookies...');
+      dispatch({ type: 'SET_PRODUCTS', payload: JSON.parse(storedProducts) });
+    } else {
+      console.log('Fetching products from API...');
+      fetchProducts(); // Fetch from API if cookies don't exist
+    }
   }, []);
-    
+
+  // Fetch products from the API and store them in cookies
+  const fetchProducts = async () => {
+    try {
+      const res = await fetch('/api/products');
+      const data = await res.json();
+      console.log('Fetched products:', data);
+
+      dispatch({ type: 'SET_PRODUCTS', payload: data }); // Store in state
+      Cookies.set('products', JSON.stringify(data), { expires: 1 }); // Store in cookies for 1 day
+    } catch (error) {
+      console.error('Failed to fetch products:', error);
+    }
+  };
 
   // Add new product
   const addProduct = async (productData) => {
@@ -53,6 +64,9 @@ export const ProductProvider = ({ children }) => {
       });
       const newProduct = await res.json();
       dispatch({ type: 'ADD_PRODUCT', payload: newProduct });
+
+      // Update cookies after adding a product
+      updateCookies([...products, newProduct]);
     } catch (error) {
       console.error('Failed to add product:', error);
     }
@@ -68,6 +82,12 @@ export const ProductProvider = ({ children }) => {
       });
       const updatedProduct = await res.json();
       dispatch({ type: 'UPDATE_PRODUCT', payload: updatedProduct });
+
+      // Update cookies after updating a product
+      const updatedProducts = products.map((p) =>
+        p._id === id ? updatedProduct : p
+      );
+      updateCookies(updatedProducts);
     } catch (error) {
       console.error('Failed to update product:', error);
     }
@@ -79,10 +99,19 @@ export const ProductProvider = ({ children }) => {
       const res = await fetch(`/api/products/${id}`, { method: 'DELETE' });
       if (res.ok) {
         dispatch({ type: 'DELETE_PRODUCT', payload: id });
+
+        // Update cookies after deleting a product
+        const updatedProducts = products.filter((p) => p._id !== id);
+        updateCookies(updatedProducts);
       }
     } catch (error) {
       console.error('Failed to delete product:', error);
     }
+  };
+
+  // Helper function to update cookies
+  const updateCookies = (productList) => {
+    Cookies.set('products', JSON.stringify(productList), { expires: 1 });
   };
 
   return (

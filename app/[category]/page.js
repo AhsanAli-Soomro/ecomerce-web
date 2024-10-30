@@ -5,6 +5,7 @@ import { motion } from 'framer-motion';
 import { FiShoppingCart } from 'react-icons/fi';
 import { useCart } from '../../contexts/CartContext';
 import { useEffect, useState } from 'react';
+import Image from 'next/image';
 
 export default function CategoryPage({ params }) {
   const { products } = useProducts(); // Get products from context
@@ -55,9 +56,11 @@ export default function CategoryPage({ params }) {
               initial="hidden"
               animate="visible"
             >
-              <img
+              <Image
                 src={product.image}
                 alt={product.name}
+                width={500}
+                height={100}
                 className="w-full h-60 object-cover rounded-md cursor-pointer hover:opacity-90"
                 onClick={() => handleProductClick(product._id)}
               />
