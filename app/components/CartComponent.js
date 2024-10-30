@@ -63,48 +63,62 @@ export default function CartComponent() {
     cart.reduce((total, item) => total + item.quantity, 0);
 
   const calculateTotalAmount = () =>
-    cart.reduce((total, item) => total + item.price * item.quantity, 0);
+    cart.reduce((total, item) => {
+      const salePrice = item.sale > 0
+        ? item.price - (item.price * item.sale) / 100
+        : item.price;
+      return total + salePrice * item.quantity;
+    }, 0);
 
-  const handleCheckout = async () => {
-    const orderId = `ORDER-${Math.random().toString(36).substring(2, 9).toUpperCase()}`;
-    const predefinedPhone = process.env.NEXT_PUBLIC_TWILIO_TRIAL_NUMBER;
-    const totalQuantity = calculateTotalQuantity(); // Total quantity of items
-    const totalAmount = calculateTotalAmount();
 
-    try {
-      const response = await fetch('/api/sendNotification', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          phone: predefinedPhone,
-          orderId,
-          email: formData.email,
-          userphone: formData.userphone,
-          name: formData.name,
-          totalQuantity, // Pass total quantity to API
-          country: formData.country,
-          state: formData.state,
-          city: formData.city,
-          address: formData.address,
-          postalCode: formData.postalCode,
-          cart,
-          totalAmount,
-        }),
-      });
-
-      if (!response.ok) {
-        const { error } = await response.json();
-        throw new Error(error || 'Failed to send notification');
+    const handleCheckout = async () => {
+      const orderId = `ORDER-${Math.random().toString(36).substring(2, 9).toUpperCase()}`;
+      const predefinedPhone = process.env.NEXT_PUBLIC_TWILIO_TRIAL_NUMBER;
+      const totalQuantity = calculateTotalQuantity();
+      const totalAmount = calculateTotalAmount();
+    
+      const cartWithDiscounts = cart.map(item => ({
+        ...item,
+        salePrice: item.sale > 0 
+          ? item.price - (item.price * item.sale) / 100 
+          : item.price,
+      }));
+    
+      try {
+        const response = await fetch('/api/sendNotification', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            phone: predefinedPhone,
+            orderId,
+            email: formData.email,
+            userphone: formData.userphone,
+            name: formData.name,
+            totalQuantity,
+            totalAmount,
+            country: formData.country,
+            state: formData.state,
+            city: formData.city,
+            address: formData.address,
+            postalCode: formData.postalCode,
+            cart: cartWithDiscounts,
+          }),
+        });
+    
+        if (!response.ok) {
+          const { error } = await response.json();
+          throw new Error(error || 'Failed to send notification');
+        }
+    
+        alert('Order placed successfully. Confirmation email and SMS sent!');
+        dispatch({ type: 'CLEAR_CART' });
+        router.push('/');
+      } catch (error) {
+        console.error(error);
+        alert('Something went wrong! Please try again.');
       }
-
-      alert('Order placed successfully. Confirmation email and SMS sent!');
-      dispatch({ type: 'CLEAR_CART' });
-      router.push('/');
-    } catch (error) {
-      console.error(error);
-      alert('Something went wrong! Please try again.');
-    }
-  };
+    };
+    
 
   if (!mounted || !authLoaded) return null;
   if (cart.length === 0) return <p>Your cart is empty</p>;
@@ -125,15 +139,32 @@ export default function CartComponent() {
             >
               <div className="flex items-center space-x-4 mb-4 sm:mb-0">
                 <Image
-                width={200}
-                height={100}
+                  width={200}
+                  height={100}
                   src={item.image}
                   alt={item.name}
                   className="w-32 h-32 sm:w-24 sm:h-24 object-cover rounded-md"
                 />
                 <div>
                   <h2 className="text-lg font-semibold">{item.name}</h2>
-                  <p className="text-gray-600">${item.price} x {item.quantity}</p>
+                  <div className="flex items-center space-x-2 mt-2">
+                    {item.sale > 0 ? (
+                      <>
+                        <p className="text-gray-400 line-through">
+                          ${item.price.toFixed(2)}
+                        </p>
+                        <p className="text-lg font-semibold text-yellow-500">
+                          ${(item.price - (item.price * item.sale) / 100).toFixed(2)} x {item.quantity}
+                        </p>
+                      </>
+                    ) : (
+                      <p className="text-lg font-semibold text-gray-800">
+                        ${item.price.toFixed(2)} x {item.quantity}
+                      </p>
+                    )}
+
+                  </div>
+
                   <input
                     type="number"
                     value={item.quantity}
@@ -153,8 +184,9 @@ export default function CartComponent() {
           ))}
 
           <p className="text-xl font-semibold text-right">
-            Total Amount: ${calculateTotalAmount()}
+            Total Amount: ${calculateTotalAmount().toFixed(2)}
           </p>
+
 
           {/* Checkout Button or Sign-in Options */}
           <div className="mt-6">

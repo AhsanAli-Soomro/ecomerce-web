@@ -139,7 +139,7 @@ export default function ProductDetails({ params }) {
     });
   };
 
-  if (loading){
+  if (loading) {
     return (
       <div className='container mx-auto text-center pt-20'>
         <div role="status">
@@ -154,9 +154,10 @@ export default function ProductDetails({ params }) {
     );
   };
   if (!product) return <p>Product not found</p>;
-
+  const salePrice = product.price - (product.price * product.sale) / 100;
   return (
     <div className="product-details-container container mx-auto p-8 min-h-screen">
+      
       {/* Go Back Button */}
       <button
         onClick={() => router.back()}
@@ -172,8 +173,8 @@ export default function ProductDetails({ params }) {
         {/* Product Image */}
         <div className="product-image relative">
           <Image
-          width={500}
-          height={100}
+            width={500}
+            height={100}
             src={product.image}
             alt={product.name}
             className="w-full h-full object-fill rounded-xl shadow-md hover:shadow-lg transition-shadow"
@@ -188,7 +189,22 @@ export default function ProductDetails({ params }) {
             Category: <span className="text-gray-800">{product.category}</span>
             </p> */}
             <p className="text-md text-gray-500 leading-relaxed">{product.description}</p>
-            <p className="text-2xl font-semibold text-yellow-500">${product.price}</p>
+            <div className="flex items-center space-x-2 mt-2">
+                {product.sale > 0 ? (
+                  <>
+                    <p className="text-gray-400 line-through">
+                      ${product.price.toFixed(2)}
+                    </p>
+                    <p className="text-lg font-semibold text-yellow-500">
+                      ${salePrice.toFixed(2)}
+                    </p>
+                  </>
+                ) : (
+                  <p className="text-lg font-semibold text-gray-800">
+                    ${product.price.toFixed(2)}
+                  </p>
+                )}
+              </div>            
 
           </div>
           <div className="product-rating-container py-6 flex flex-col space-y-4">
