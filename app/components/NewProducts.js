@@ -27,7 +27,7 @@ export default function LatestProductsScroll() {
   }
 
   return (
-    <div className="container mx-auto relative overflow-hidden w-full bg-gray-100 py-6">
+    <div className="container pt-10 mx-auto relative overflow-hidden w-full bg-gray-100 py-6">
       {/* Two identical sections for continuous scrolling */}
       <motion.div
         className="flex space-x-8 animate-scroll"
