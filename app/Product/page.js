@@ -258,7 +258,7 @@ export default function HomePage() {
                 </div>
 
                 <div className="px-4 sm:px-6">
-                  <h2 className="product-name text-xl sm:text-2xl font-bold mt-2 text-gray-800 tracking-tight">
+                  <h2 className="product-name line-clamp-1 text-xl sm:text-2xl font-bold mt-2 text-gray-800 tracking-tight">
                     {product.name}
                   </h2>
                   <p className="product-category text-gray-500">
