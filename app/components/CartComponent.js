@@ -4,6 +4,8 @@ import { useRouter } from 'next/navigation';
 import { useAuth, useUser, SignInButton } from '@clerk/nextjs';
 import { useEffect, useState } from 'react';
 import Image from 'next/image';
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 export default function CartComponent() {
   const { cart, dispatch } = useCart();
@@ -71,53 +73,69 @@ export default function CartComponent() {
     }, 0);
 
 
-const handleCheckout = async () => {
-  const orderId = `ORDER-${Math.random().toString(36).substring(2, 9).toUpperCase()}`;
-  const predefinedPhone = process.env.NEXT_PUBLIC_TWILIO_TRIAL_NUMBER;
-  const totalQuantity = calculateTotalQuantity();
-  const totalAmount = calculateTotalAmount();
-
-  const cartWithDiscounts = cart.map(item => ({
-    ...item,
-    salePrice: item.sale > 0 
-      ? item.price - (item.price * item.sale) / 100 
-      : item.price,
-  }));
-
-  try {
-    const response = await fetch('/api/sendNotification', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        phone: predefinedPhone,
-        orderId,
-        email: formData.email,
-        userphone: formData.userphone,
-        name: formData.name,
-        totalQuantity,
-        totalAmount,
-        country: formData.country,
-        state: formData.state,
-        city: formData.city,
-        address: formData.address,
-        postalCode: formData.postalCode,
-        cart: cartWithDiscounts,
-      }),
-    });
-
-    if (!response.ok) {
-      const { error } = await response.json();
-      throw new Error(error || 'Failed to send notification');
-    }
-
-    alert('Order placed successfully. Confirmation email and SMS sent!');
-    dispatch({ type: 'CLEAR_CART' });
-    router.push('/');
-  } catch (error) {
-    console.error(error);
-    alert('Something went wrong! Please try again.');
-  }
-};
+    const handleCheckout = async () => {
+      const orderId = `ORDER-${Math.random().toString(36).substring(2, 9).toUpperCase()}`;
+      const predefinedPhone = process.env.NEXT_PUBLIC_TWILIO_TRIAL_NUMBER;
+      const totalQuantity = calculateTotalQuantity();
+      const totalAmount = calculateTotalAmount();
+    
+      const cartWithDiscounts = cart.map((item) => ({
+        ...item,
+        salePrice: item.sale > 0 ? item.price - (item.price * item.sale) / 100 : item.price,
+      }));
+    
+      // Initialize the toast and store the ID
+      const loadingToastId = toast.loading('Processing your order...');
+    
+      try {
+        const response = await fetch('/api/sendNotification', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            phone: predefinedPhone,
+            orderId,
+            email: formData.email,
+            userphone: formData.userphone,
+            name: formData.name,
+            totalQuantity,
+            totalAmount,
+            country: formData.country,
+            state: formData.state,
+            city: formData.city,
+            address: formData.address,
+            postalCode: formData.postalCode,
+            cart: cartWithDiscounts,
+          }),
+        });
+    
+        if (!response.ok) {
+          const { error } = await response.json();
+          throw new Error(error || 'Failed to send notification');
+        }
+    
+        // Update the toast with a success message
+        toast.update(loadingToastId, {
+          render: 'Order placed successfully! Confirmation email and SMS sent!',
+          type: 'success',
+          isLoading: false,
+          autoClose: 3000,
+        });
+    
+        // Clear the cart and redirect to the homepage
+        dispatch({ type: 'CLEAR_CART' });
+        router.push('/');
+      } catch (error) {
+        console.error(error);
+    
+        // Update the toast with an error message
+        toast.update(loadingToastId, {
+          render: 'Something went wrong! Please try again.',
+          type: 'error',
+          isLoading: false,
+          autoClose: 3000,
+        });
+      }
+    };
 
 
   if (!mounted || !authLoaded) return null;
@@ -125,6 +143,7 @@ const handleCheckout = async () => {
 
   return (
     <div className="cart-container p-4 bg-white h-screen overflow-y-scroll mt-6 rounded-lg sm:p-8 max-w-4xl mx-auto">
+          <ToastContainer />
       <h1 className="text-2xl sm:text-3xl font-bold mb-6 text-center">Your Cart</h1>
 
       {cart.length === 0 ? (
