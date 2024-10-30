@@ -3,8 +3,11 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth, useUser, SignInButton } from '@clerk/nextjs'; // Import Clerk hooks
 import { useCart } from '../../../contexts/CartContext';
+import { ToastContainer, toast } from 'react-toastify'; // Import react-toastify
+import 'react-toastify/dist/ReactToastify.css'; // Import toastify styles
 import CategoryProducts from '@/app/components/CategoryProducts';
 import Image from 'next/image';
+import { FiShoppingCart } from 'react-icons/fi';
 
 export default function ProductDetails({ params }) {
   const router = useRouter();
@@ -52,6 +55,44 @@ export default function ProductDetails({ params }) {
 
   const handleAddToCart = (product) => {
     cartDispatch({ type: 'ADD_TO_CART', payload: product });
+
+    // Show toast notification
+    toast.success(
+      <div className="flex items-center space-x-4 p-2">
+        {/* Product Image */}
+        <div className="flex-shrink-0">
+          <Image
+            width={500}
+            height={100}
+            src={product.image}
+            alt={product.name}
+            className="w-16 h-16 object-cover rounded-md shadow-md hover:shadow-lg transition-shadow"
+          />
+        </div>
+
+        {/* Product Info and Cart Link */}
+        <div className="flex flex-col">
+          <p className="text-sm sm:text-base font-medium text-gray-800">
+            {product.name} added to your cart!
+          </p>
+          <a
+            href="/cart"
+            className="text-yellow-600 font-semibold underline hover:text-yellow-700 transition-colors mt-1 flex items-center space-x-1"
+          >
+            <FiShoppingCart size={18} />
+            <span>View Cart</span>
+          </a>
+        </div>
+      </div>,
+      {
+        position: "top-right",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+      }
+    );
   };
 
   const handleRatingChange = async (newRating) => {
@@ -157,7 +198,7 @@ export default function ProductDetails({ params }) {
   const salePrice = product.price - (product.price * product.sale) / 100;
   return (
     <div className="product-details-container container mx-auto p-8 min-h-screen">
-      
+      <ToastContainer />
       {/* Go Back Button */}
       <button
         onClick={() => router.back()}
@@ -190,21 +231,21 @@ export default function ProductDetails({ params }) {
             </p> */}
             <p className="text-md text-gray-500 leading-relaxed">{product.description}</p>
             <div className="flex items-center space-x-2 mt-2">
-                {product.sale > 0 ? (
-                  <>
-                    <p className="text-gray-400 line-through">
-                      ${product.price.toFixed(2)}
-                    </p>
-                    <p className="text-lg font-semibold text-yellow-500">
-                      ${salePrice.toFixed(2)}
-                    </p>
-                  </>
-                ) : (
-                  <p className="text-lg font-semibold text-gray-800">
+              {product.sale > 0 ? (
+                <>
+                  <p className="text-gray-400 line-through">
                     ${product.price.toFixed(2)}
                   </p>
-                )}
-              </div>            
+                  <p className="text-lg font-semibold text-yellow-500">
+                    ${salePrice.toFixed(2)}
+                  </p>
+                </>
+              ) : (
+                <p className="text-lg font-semibold text-gray-800">
+                  ${product.price.toFixed(2)}
+                </p>
+              )}
+            </div>
 
           </div>
           <div className="product-rating-container py-6 flex flex-col space-y-4">
