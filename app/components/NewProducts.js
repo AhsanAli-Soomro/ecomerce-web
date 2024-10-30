@@ -46,8 +46,8 @@ export default function LatestProductsScroll() {
           >
             {/* Product Image */}
             <Image
-            width={500}
-            height={100}
+              width={500}
+              height={100}
               src={product.image}
               alt={product.name}
               className="h-48 w-full object-cover"

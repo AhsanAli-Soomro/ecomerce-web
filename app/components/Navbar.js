@@ -53,7 +53,12 @@ export default function Navbar() {
             className="text-3xl font-extrabold tracking-wide text-gray-800 cursor-pointer hover:text-yellow-500 transition-colors"
             onClick={() => router.push('/')}
           >
-            <Image src="/logo.png" width={200} height={100}/>
+            <Image
+              width={200}
+              height={100}
+              src="/logo.png"
+              alt="RoyalHunt"
+            />
           </h1>
 
           {/* Desktop Links */}
