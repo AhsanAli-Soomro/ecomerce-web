@@ -118,12 +118,16 @@ export default function CartComponent() {
           render: 'Order placed successfully! Confirmation email and SMS sent!',
           type: 'success',
           isLoading: false,
-          autoClose: 3000,
+          autoClose: 1000, // Close after 3 seconds
         });
     
-        // Clear the cart and redirect to the homepage
+        // Clear the cart
         dispatch({ type: 'CLEAR_CART' });
-        router.push('/');
+    
+        // Redirect to homepage after the success toast disappears
+        setTimeout(() => {
+          router.push('/');
+        }, 1000);
       } catch (error) {
         console.error(error);
     
@@ -139,7 +143,7 @@ export default function CartComponent() {
 
 
   if (!mounted || !authLoaded) return null;
-  if (cart.length === 0) return <p>Your cart is empty</p>;
+  // if (cart.length === 0) return <p>Your cart is empty</p>;
 
   return (
     <div className="cart-container p-4 bg-white h-screen overflow-y-scroll mt-6 rounded-lg sm:p-8 max-w-4xl mx-auto">
