@@ -71,54 +71,54 @@ export default function CartComponent() {
     }, 0);
 
 
-    const handleCheckout = async () => {
-      const orderId = `ORDER-${Math.random().toString(36).substring(2, 9).toUpperCase()}`;
-      const predefinedPhone = process.env.NEXT_PUBLIC_TWILIO_TRIAL_NUMBER;
-      const totalQuantity = calculateTotalQuantity();
-      const totalAmount = calculateTotalAmount();
-    
-      const cartWithDiscounts = cart.map(item => ({
-        ...item,
-        salePrice: item.sale > 0 
-          ? item.price - (item.price * item.sale) / 100 
-          : item.price,
-      }));
-    
-      try {
-        const response = await fetch('/api/sendNotification', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            phone: predefinedPhone,
-            orderId,
-            email: formData.email,
-            userphone: formData.userphone,
-            name: formData.name,
-            totalQuantity,
-            totalAmount,
-            country: formData.country,
-            state: formData.state,
-            city: formData.city,
-            address: formData.address,
-            postalCode: formData.postalCode,
-            cart: cartWithDiscounts,
-          }),
-        });
-    
-        if (!response.ok) {
-          const { error } = await response.json();
-          throw new Error(error || 'Failed to send notification');
-        }
-    
-        alert('Order placed successfully. Confirmation email and SMS sent!');
-        dispatch({ type: 'CLEAR_CART' });
-        router.push('/');
-      } catch (error) {
-        console.error(error);
-        alert('Something went wrong! Please try again.');
-      }
-    };
-    
+const handleCheckout = async () => {
+  const orderId = `ORDER-${Math.random().toString(36).substring(2, 9).toUpperCase()}`;
+  const predefinedPhone = process.env.NEXT_PUBLIC_TWILIO_TRIAL_NUMBER;
+  const totalQuantity = calculateTotalQuantity();
+  const totalAmount = calculateTotalAmount();
+
+  const cartWithDiscounts = cart.map(item => ({
+    ...item,
+    salePrice: item.sale > 0 
+      ? item.price - (item.price * item.sale) / 100 
+      : item.price,
+  }));
+
+  try {
+    const response = await fetch('/api/sendNotification', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        phone: predefinedPhone,
+        orderId,
+        email: formData.email,
+        userphone: formData.userphone,
+        name: formData.name,
+        totalQuantity,
+        totalAmount,
+        country: formData.country,
+        state: formData.state,
+        city: formData.city,
+        address: formData.address,
+        postalCode: formData.postalCode,
+        cart: cartWithDiscounts,
+      }),
+    });
+
+    if (!response.ok) {
+      const { error } = await response.json();
+      throw new Error(error || 'Failed to send notification');
+    }
+
+    alert('Order placed successfully. Confirmation email and SMS sent!');
+    dispatch({ type: 'CLEAR_CART' });
+    router.push('/');
+  } catch (error) {
+    console.error(error);
+    alert('Something went wrong! Please try again.');
+  }
+};
+
 
   if (!mounted || !authLoaded) return null;
   if (cart.length === 0) return <p>Your cart is empty</p>;
