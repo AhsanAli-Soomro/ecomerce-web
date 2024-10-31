@@ -70,8 +70,8 @@ export default function AdminLogin() {
     };
 
     return (
-        <div>
-            <div className="flex fixed top-24 right-10 items-center justify-end w-full gap-4">
+        <div className='pt-5'>
+            <div className="flex fixed top-32 right-10 items-center justify-end w-full gap-4">
                 <button
                     onClick={handleadmin}
                     className="mt-6 text-gray-100 py-2 px-4 rounded-xl bg-red-500 hover:bg-red-600 font-semibold transition-transform transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-red-300"
@@ -79,7 +79,7 @@ export default function AdminLogin() {
                     Admin
                 </button>
             </div>
-            <div className="flex items-center justify-center h-svh bg-gray-100">
+            <div className="flex items-center justify-center py-48 bg-gray-100">
                 <div className="bg-white p-8 rounded-lg shadow-md w-full max-w-md">
                     <h2 className="text-2xl font-bold mb-6 text-center text-gray-800">
                         {step === 'login' ? 'Admin Login' : 'Update Credentials'}

@@ -18,8 +18,8 @@ export async function GET(req, { params }) {
 }
 
 export async function POST(req, { params }) {
-  const { id } = params; // Ensure the product ID is correct
-  const { user, text } = await req.json(); // Get comment data from the request body
+  const { id } = params;
+  const { user, text } = await req.json();
 
   await connectDB();
 
@@ -29,13 +29,37 @@ export async function POST(req, { params }) {
       return new Response(JSON.stringify({ error: 'Product not found' }), { status: 404 });
     }
 
-    // Push the new comment into the product's comments array
     product.comments.push({ user, text });
-    await product.save(); // Save the updated product with the new comment
+    await product.save();
 
     return new Response(JSON.stringify(product), { status: 201 });
   } catch (error) {
     console.error('Error adding comment:', error);
+    return new Response(JSON.stringify({ error: error.message }), { status: 500 });
+  }
+}
+
+export async function PUT(req, { params }) {
+  const { id } = params;
+  const updatedData = await req.json();
+
+  await connectDB();
+
+  try {
+    const product = await Product.findById(id);
+    if (!product) {
+      return new Response(JSON.stringify({ error: 'Product not found' }), { status: 404 });
+    }
+
+    // Update product fields
+    Object.keys(updatedData).forEach((key) => {
+      product[key] = updatedData[key];
+    });
+
+    await product.save(); // Save the updated product
+
+    return new Response(JSON.stringify(product), { status: 200 });
+  } catch (error) {
     return new Response(JSON.stringify({ error: error.message }), { status: 500 });
   }
 }

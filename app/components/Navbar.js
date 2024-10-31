@@ -5,6 +5,8 @@ import { FiShoppingCart, FiMenu, FiX, FiSearch, FiFacebook, FiTwitter, FiInstagr
 import { useProducts } from '../../contexts/ProductContext';
 import { useRouter, usePathname } from 'next/navigation';
 import Image from 'next/image';
+import SignInModal from '../sign-in/page';
+import SignUpModal from '../sign-up/page';
 
 export default function Navbar() {
   const { isSignedIn } = useAuth();
@@ -47,10 +49,10 @@ export default function Navbar() {
 
   return (
     <div className='fixed z-20 w-full'>
-      <nav className="navbar bg-white shadow-lg p-4">
+      <nav className="navbar backdrop-blur-md shadow-lg p-4">
         <div className="container mx-auto flex justify-between items-center">
           <h1
-            className="text-3xl font-extrabold tracking-wide text-gray-800 cursor-pointer hover:text-yellow-500 transition-colors"
+            className="text-3xl font-extrabold tracking-wide   cursor-pointer hover:text-yellow-500 transition-colors"
             onClick={() => router.push('/')}
           >
             <Image
@@ -212,22 +214,32 @@ function CategoryLinks({ categories, products, activePath }) {
 
 // Authentication Buttons Component
 function AuthButtons({ isSignedIn }) {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isSignUpOpen, setIsSignUpOpen] = useState(false);
+
+  const openSignUp = () => setIsSignUpOpen(true);
+  const closeSignUp = () => setIsSignUpOpen(false);
+
+  const openModal = () => setIsModalOpen(true);
+  const closeModal = () => setIsModalOpen(false);
   return isSignedIn ? (
     <UserButton />
   ) : (
     <div className="flex">
-      <SignInButton mode="modal">
-        <button className="text-gray-800 font-semibold py-2 px-6 transition-transform transform hover:scale-105">
+      {/* <SignInButton mode="modal"> */}
+        <button onClick={openModal} className="text-gray-800 font-semibold py-2 px-6 transition-transform transform hover:scale-105">
           Sign In
         </button>
-      </SignInButton>
-      <SignUpButton mode="modal">
-        <button className="text-gray-800 font-semibold py-2 px-6 rounded-full shadow-xl border-yellow-500 border-2 
+        <SignInModal isOpen={isModalOpen} onClose={closeModal} />
+      {/* </SignInButton> */}
+      {/* <SignUpButton mode="modal"> */}
+        <button onClick={openSignUp} className="text-gray-800 font-semibold py-2 px-6 rounded-full shadow-xl border-yellow-500 border-2 
                            hover:border-yellow-600 hover:text-gray-900 transition-transform transform hover:scale-105 
                             focus:outline-none focus:ring-4 focus:ring-yellow-300">
           Sign Up
         </button>
-      </SignUpButton>
+        <SignUpModal isOpen={isSignUpOpen} onClose={closeSignUp} />
+      {/* </SignUpButton> */}
     </div>
   );
 }

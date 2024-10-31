@@ -33,7 +33,8 @@ export default function RootLayout({ children }) {
           <ProductProvider>
             <CartProvider>
               <Navbar />
-              <div className=" bg-gray-100 px-4 pt-28">
+              {/* <div className="bg-gradient-to-r from-gray-800 text-gray-100 to-gray-900 px-4 pt-28"> */}
+              <div className="bg-gray-100 px-4 pt-28">
                 {children}
               </div>
               <Footer/>

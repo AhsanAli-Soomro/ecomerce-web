@@ -9,6 +9,9 @@ import { motion } from 'framer-motion';
 import { ChevronDownIcon, ChevronUpIcon } from '@heroicons/react/20/solid';
 import Image from 'next/image';
 import { FiShoppingCart } from 'react-icons/fi';
+import 'slick-carousel/slick/slick.css';
+import 'slick-carousel/slick/slick-theme.css';
+import Slider from 'react-slick';
 
 
 export default function HomePage() {
@@ -241,21 +244,39 @@ export default function HomePage() {
                 whileHover={{ scale: 1.05 }}
               >
                 <div className="relative">
-                  {/* Product Image */}
-                  <Image
-                    width={500}
-                    height={100}
-                    src={product.image}
-                    alt={product.name}
-                    className="product-image w-full h-60 object-cover rounded-t-xl cursor-pointer hover:opacity-90 transition-opacity"
-                    onClick={() => handleProductClick(product._id)}
-                  />
+                  {product.images && product.images.length > 0 ? (
+                    <Slider dots infinite speed={500} slidesToShow={1} slidesToScroll={1}>
+                      {product.images.map((imgUrl, index) => (
+                        <div key={index}>
+                          <Image
+                            width={500}
+                            height={100}
+                            src={imgUrl}
+                            alt={`${product.name} Image ${index + 1}`}
+                            className="w-full h-60 object-cover rounded-t-xl cursor-pointer hover:opacity-90 transition-opacity"
+                            onClick={() => handleProductClick(product._id)}
+                          />
+                        </div>
+                      ))}
+                    </Slider>
+                  ) : (
+                    <Image
+                      width={500}
+                      height={100}
+                      src={product.image} // Fallback single image
+                      alt={product.name}
+                      className="w-full h-60 object-cover rounded-t-xl cursor-pointer hover:opacity-90 transition-opacity"
+                      onClick={() => handleProductClick(product._id)}
+                    />
+                  )}
+
                   {product.sale > 0 && (
                     <span className="absolute top-3 right-3 bg-yellow-500 text-white text-sm font-semibold px-2 py-1 rounded-full">
                       {product.sale}% OFF
                     </span>
                   )}
                 </div>
+
 
                 <div className="px-4 sm:px-6">
                   <h2 className="product-name line-clamp-1 text-xl sm:text-2xl font-bold mt-2 text-gray-800 tracking-tight">
@@ -269,7 +290,7 @@ export default function HomePage() {
                     {product.sale > 0 ? (
                       <>
                         <p className="text-gray-400 line-through">
-                          ${product.price.toFixed(2)}
+                          ${product.price ? product.price.toFixed(2) : '0.00'}
                         </p>
                         <p className="text-lg font-semibold text-yellow-500">
                           ${salePrice.toFixed(2)}
@@ -277,15 +298,17 @@ export default function HomePage() {
                       </>
                     ) : (
                       <p className="text-lg font-semibold text-gray-800">
-                        ${product.price.toFixed(2)}
+                        ${product.price ? product.price.toFixed(2) : '0.00'}
                       </p>
                     )}
                   </div>
 
+
                   <div className="product-rating flex items-center space-x-1 mt-2">
                     {renderStars(calculateAverageRating(product.ratings))}
-                    <span className="text-sm text-gray-600">({product.ratings.length})</span>
+                    <span className="text-sm text-gray-600">({product.ratings?.length || 0})</span>
                   </div>
+
                 </div>
 
                 <button

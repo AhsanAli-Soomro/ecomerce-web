@@ -22,6 +22,7 @@ const ProductSchema = new mongoose.Schema({
   description: { type: String, required: true },
   ratings: [RatingSchema], // Array of ratings
   comments: [CommentSchema], // Array of comments
+  // images: [{ type: String }],
 });
 
 export default mongoose.models.Product || mongoose.model('Product', ProductSchema);

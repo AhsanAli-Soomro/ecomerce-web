@@ -27,7 +27,7 @@ export default function LatestProductsScroll() {
   }
 
   return (
-    <div className="container pt-10 mx-auto relative overflow-hidden w-full bg-gray-100 py-6">
+    <div className="container pt-10 mx-auto relative overflow-hidden w-full py-6">
       {/* Two identical sections for continuous scrolling */}
       <motion.div
         className="flex space-x-8 animate-scroll"
@@ -53,7 +53,7 @@ export default function LatestProductsScroll() {
               className="h-48 w-full object-cover"
             />
             {/* Product Info Overlay */}
-            <div className="absolute bottom-0 left-0 w-full bg-black bg-opacity-50 text-white p-3">
+            <div className="absolute bottom-0 left-0 w-full text-white bg-black bg-opacity-50 p-3">
               <h3 className="font-bold text-lg truncate">{product.name}</h3>
               <p className="text-yellow-400 font-semibold text-md mt-1">
                 {/* ${product.price.toFixed(2)} */}

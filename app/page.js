@@ -6,11 +6,11 @@ import LatestProductsScroll from './components/NewProducts';
 
 export default function App() {
   return (
-<>
+<div>
 <Link href="/Product">
  <LatestProductsScroll/>
 </Link>
 <Product/>
-</>
+</div>
   );
 }
