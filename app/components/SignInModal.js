@@ -43,8 +43,6 @@ export default function SignInModal({ isOpen, onClose }) {
       <button onClick={onClose} className="absolute top-3 right-3 text-gray-500 hover:text-gray-700">
         &times;
       </button>
-
-      {/* Logo */}
       <div className="flex justify-center mb-10">
         <Image
           width={200}
@@ -53,7 +51,6 @@ export default function SignInModal({ isOpen, onClose }) {
           alt="RoyalHunt"
         />
       </div>
-
       {/* Email and Password Sign-In Form */}
       <form onSubmit={handleSignIn} className="space-y-4">
         <div>

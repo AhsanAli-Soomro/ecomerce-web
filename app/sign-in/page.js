@@ -1,7 +1,7 @@
 'use client';
 import { useSignIn } from '@clerk/nextjs';
 import Image from 'next/image';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { BsApple, BsFacebook, BsGoogle } from 'react-icons/bs';
 
 export default function SignInModal({ isOpen, onClose }) {
@@ -9,6 +9,12 @@ export default function SignInModal({ isOpen, onClose }) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+  const [redirectUrl, setRedirectUrl] = useState('/');
+
+  useEffect(() => {
+    // Set the redirect URL to the current page
+    setRedirectUrl(window.location.href);
+  }, []);
 
   if (!isOpen) return null;
 
@@ -18,10 +24,10 @@ export default function SignInModal({ isOpen, onClose }) {
       const result = await signIn.create({
         identifier: email,
         password,
+        redirectUrl, // Redirect back to the page after sign-in
       });
       if (result.status === 'complete') {
         onClose();
-        window.location.href = '/dashboard'; // Redirect on successful sign-in
       }
     } catch (err) {
       setError('Invalid email or password');
@@ -30,7 +36,10 @@ export default function SignInModal({ isOpen, onClose }) {
 
   const handleSocialSignIn = async (provider) => {
     try {
-      await signIn.authenticateWithRedirect({ strategy: `oauth_${provider}` });
+      await signIn.authenticateWithRedirect({
+        strategy: `oauth_${provider}`,
+        redirectUrl, // Redirect back to the page after social sign-in
+      });
     } catch (err) {
       setError(`Failed to sign in with ${provider}`);
     }
@@ -44,8 +53,6 @@ export default function SignInModal({ isOpen, onClose }) {
           <button onClick={onClose} className="absolute top-3 right-3 text-gray-500 hover:text-gray-700">
             &times;
           </button>
-
-          {/* Logo */}
           <div className="flex justify-center mb-10">
             <Image
               width={200}
@@ -54,7 +61,6 @@ export default function SignInModal({ isOpen, onClose }) {
               alt="RoyalHunt"
             />
           </div>
-
           {/* Email and Password Sign-In Form */}
           <form onSubmit={handleSignIn} className="space-y-4">
             <div>

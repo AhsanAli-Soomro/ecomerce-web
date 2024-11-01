@@ -21,7 +21,7 @@ export default function SignUpModal({ isOpen, onClose }) {
       });
       if (result.status === 'complete') {
         onClose();
-        window.location.href = '/dashboard'; // Redirect on successful sign-up
+        window.location.href = '/'; // Redirect on successful sign-up
       }
     } catch (err) {
       setError('Failed to create an account');
@@ -31,6 +31,10 @@ export default function SignUpModal({ isOpen, onClose }) {
   const handleSocialSignUp = async (provider) => {
     try {
       await signUp.authenticateWithRedirect({ strategy: `oauth_${provider}` });
+      if (result.status === 'complete') {
+        onClose();
+        window.location.href = '/'; // Redirect on successful sign-up
+      }
     } catch (err) {
       setError(`Failed to sign up with ${provider}`);
     }
@@ -44,8 +48,6 @@ export default function SignUpModal({ isOpen, onClose }) {
           <button onClick={onClose} className="absolute top-3 right-3 text-gray-500 hover:text-gray-700">
             &times;
           </button>
-
-          {/* Logo */}
           <div className="flex justify-center mb-6">
             <Image
               width={200}
@@ -54,11 +56,9 @@ export default function SignUpModal({ isOpen, onClose }) {
               alt="RoyalHunt"
             />
           </div>
-
           <h2 className="text-2xl font-semibold text-yellow-500 text-center mb-6">
             Create Your Account
           </h2>
-
           {/* Email and Password Sign-Up Form */}
           <form onSubmit={handleSignUp} className="space-y-4">
             <div>
