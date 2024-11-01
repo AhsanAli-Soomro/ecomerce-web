@@ -148,8 +148,8 @@ export default function SubcategoryPage({ params }) {
               <button
                 onClick={() => handleAddToCart(product)}
                 className="text-white w-full mt-6 font-semibold py-3 px-8 rounded-b-lg shadow-lg bg-gradient-to-r from-yellow-500 to-yellow-600 
-                hover:from-yellow-600 hover:to-yellow-700 hover:text-gray-900 transition-transform transform hover:scale-105 
-                focus:outline-none focus:ring-4 focus:ring-yellow-300"
+                           hover:from-yellow-600 hover:to-yellow-700 hover:text-gray-900 transition-transform transform hover:scale-105 
+                           focus:outline-none focus:ring-4 focus:ring-yellow-300"
               >
                 <span>Add to Cart</span>
               </button>
