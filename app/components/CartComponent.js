@@ -84,7 +84,6 @@ export default function CartComponent() {
         salePrice: item.sale > 0 ? item.price - (item.price * item.sale) / 100 : item.price,
       }));
     
-      // Initialize the toast and store the ID
       const loadingToastId = toast.loading('Processing your order...');
     
       try {
@@ -108,30 +107,35 @@ export default function CartComponent() {
           }),
         });
     
+        const result = await response.json();
+    
         if (!response.ok) {
-          const { error } = await response.json();
-          throw new Error(error || 'Failed to send notification');
+          throw new Error(result.error || 'Failed to send notification');
         }
     
-        // Update the toast with a success message
-        toast.update(loadingToastId, {
-          render: 'Order placed successfully! Confirmation email and SMS sent!',
-          type: 'success',
-          isLoading: false,
-          autoClose: 1000, // Close after 3 seconds
-        });
+        if (result.message.includes('SMS failed')) {
+          toast.update(loadingToastId, {
+            render: result.message,
+            type: 'warning',
+            isLoading: false,
+            autoClose: 3000,
+          });
+        } else {
+          toast.update(loadingToastId, {
+            render: 'Order placed successfully! Confirmation email and SMS sent!',
+            type: 'success',
+            isLoading: false,
+            autoClose: 3000,
+          });
+        }
     
-        // Clear the cart
+        // Clear the cart and redirect
         dispatch({ type: 'CLEAR_CART' });
-    
-        // Redirect to homepage after the success toast disappears
         setTimeout(() => {
           router.push('/');
-        }, 1000);
+        }, 3000);
       } catch (error) {
         console.error(error);
-    
-        // Update the toast with an error message
         toast.update(loadingToastId, {
           render: 'Something went wrong! Please try again.',
           type: 'error',
@@ -140,6 +144,7 @@ export default function CartComponent() {
         });
       }
     };
+    
 
 
   if (!mounted || !authLoaded) return null;
