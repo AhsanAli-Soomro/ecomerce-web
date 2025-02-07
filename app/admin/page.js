@@ -100,6 +100,7 @@ export default function AdminPage() {
     setProduct(product);
     setIsEditing(true);
     setEditProductId(product._id);
+    setActiveStep(1);
   };
 
   const handleCancelEdit = () => {
