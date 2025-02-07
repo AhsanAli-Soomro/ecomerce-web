@@ -194,7 +194,8 @@ Payment Method: Cash on Delivery
     } else {
       return NextResponse.json({
         message: 'Email sent successfully, but SMS failed to deliver.',
-        error: errorMessage,
+
+        // error: errorMessage,
       });
     }
   } catch (error) {

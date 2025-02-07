@@ -6,13 +6,15 @@ import { useEffect, useState } from 'react';
 import Image from 'next/image';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import SignInModal from './SignInModal'; // Import SignIn modal
 
 export default function CartComponent() {
   const { cart, dispatch } = useCart();
   const router = useRouter();
   const { isSignedIn, isLoaded: authLoaded } = useAuth();
   const { user } = useUser();
-
+  const [isSignInModalOpen, setIsSignInModalOpen] = useState(false);
+  const [isSignUpModalOpen, setIsSignUpModalOpen] = useState(false);
   const [checkoutMode, setCheckoutMode] = useState(false);
   const [isModalOpen, setModalOpen] = useState(false);
   const openModal = () => setModalOpen(true);
@@ -28,6 +30,11 @@ export default function CartComponent() {
     postalCode: '',
     paymentMethod: 'Cash on Delivery',
   });
+
+  const openSignInModal = () => setIsSignInModalOpen(true);
+  const closeSignInModal = () => setIsSignInModalOpen(false);
+  const openSignUpModal = () => setIsSignUpModalOpen(true);
+  const closeSignUpModal = () => setIsSignUpModalOpen(false);
 
   const [mounted, setMounted] = useState(false);
 
@@ -73,78 +80,78 @@ export default function CartComponent() {
     }, 0);
 
 
-    const handleCheckout = async () => {
-      const orderId = `ORDER-${Math.random().toString(36).substring(2, 9).toUpperCase()}`;
-      const predefinedPhone = process.env.NEXT_PUBLIC_TWILIO_TRIAL_NUMBER;
-      const totalQuantity = calculateTotalQuantity();
-      const totalAmount = calculateTotalAmount();
-    
-      const cartWithDiscounts = cart.map((item) => ({
-        ...item,
-        salePrice: item.sale > 0 ? item.price - (item.price * item.sale) / 100 : item.price,
-      }));
-    
-      const loadingToastId = toast.loading('Processing your order...');
-    
-      try {
-        const response = await fetch('/api/sendNotification', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            phone: predefinedPhone,
-            orderId,
-            email: formData.email,
-            userphone: formData.userphone,
-            name: formData.name,
-            totalQuantity,
-            totalAmount,
-            country: formData.country,
-            state: formData.state,
-            city: formData.city,
-            address: formData.address,
-            postalCode: formData.postalCode,
-            cart: cartWithDiscounts,
-          }),
-        });
-    
-        const result = await response.json();
-    
-        if (!response.ok) {
-          throw new Error(result.error || 'Failed to send notification');
-        }
-    
-        if (result.message.includes('SMS failed')) {
-          toast.update(loadingToastId, {
-            render: result.message,
-            type: 'warning',
-            isLoading: false,
-            autoClose: 3000,
-          });
-        } else {
-          toast.update(loadingToastId, {
-            render: 'Order placed successfully! Confirmation email and SMS sent!',
-            type: 'success',
-            isLoading: false,
-            autoClose: 3000,
-          });
-        }
-    
-        // Clear the cart and redirect
-        dispatch({ type: 'CLEAR_CART' });
-        setTimeout(() => {
-          router.push('/');
-        }, 3000);
-      } catch (error) {
-        console.error(error);
+  const handleCheckout = async () => {
+    const orderId = `ORDER-${Math.random().toString(36).substring(2, 9).toUpperCase()}`;
+    const predefinedPhone = process.env.NEXT_PUBLIC_TWILIO_TRIAL_NUMBER;
+    const totalQuantity = calculateTotalQuantity();
+    const totalAmount = calculateTotalAmount();
+
+    const cartWithDiscounts = cart.map((item) => ({
+      ...item,
+      salePrice: item.sale > 0 ? item.price - (item.price * item.sale) / 100 : item.price,
+    }));
+
+    const loadingToastId = toast.loading('Processing your order...');
+
+    try {
+      const response = await fetch('/api/sendNotification', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          phone: predefinedPhone,
+          orderId,
+          email: formData.email,
+          userphone: formData.userphone,
+          name: formData.name,
+          totalQuantity,
+          totalAmount,
+          country: formData.country,
+          state: formData.state,
+          city: formData.city,
+          address: formData.address,
+          postalCode: formData.postalCode,
+          cart: cartWithDiscounts,
+        }),
+      });
+
+      const result = await response.json();
+
+      if (!response.ok) {
+        throw new Error(result.error || 'Failed to send notification');
+      }
+
+      if (result.message.includes('SMS failed')) {
         toast.update(loadingToastId, {
-          render: 'Something went wrong! Please try again.',
-          type: 'error',
+          render: result.message,
+          type: 'success',
+          isLoading: false,
+          autoClose: 3000,
+        });
+      } else {
+        toast.update(loadingToastId, {
+          render: 'Order placed successfully! Confirmation email and SMS sent!',
+          type: 'success',
           isLoading: false,
           autoClose: 3000,
         });
       }
-    };
-    
+
+      // Clear the cart and redirect
+      dispatch({ type: 'CLEAR_CART' });
+      setTimeout(() => {
+        router.push('/');
+      }, 3000);
+    } catch (error) {
+      console.error(error);
+      toast.update(loadingToastId, {
+        render: 'Something went wrong! Please try again.',
+        type: 'error',
+        isLoading: false,
+        autoClose: 3000,
+      });
+    }
+  };
+
 
 
   if (!mounted || !authLoaded) return null;
@@ -152,7 +159,7 @@ export default function CartComponent() {
 
   return (
     <div className="cart-container p-4 bg-white h-screen overflow-y-scroll mt-6 rounded-lg sm:p-8 max-w-4xl mx-auto">
-          <ToastContainer />
+      <ToastContainer />
       <h1 className="text-2xl sm:text-3xl font-bold mb-6 text-center">Your Cart</h1>
 
       {cart.length === 0 ? (
@@ -222,24 +229,22 @@ export default function CartComponent() {
               <button
                 onClick={openModal}
                 className="text-white w-full font-semibold py-2 px-6 rounded-full shadow-xl bg-gradient-to-r from-yellow-500 to-yellow-600 
-                          hover:from-yellow-600 hover:to-yellow-700 hover:text-gray-900 transition-transform transform hover:scale-105 
-                          focus:outline-none focus:ring-4 focus:ring-yellow-300"              >
+                         hover:from-yellow-600 hover:to-yellow-700 hover:text-gray-900 transition-transform transform hover:scale-105 
+                           focus:outline-none focus:ring-4 focus:ring-yellow-300"
+              >
                 Checkout
               </button>
             ) : (
               <div className="space-y-4">
-                <p className="text-gray-600">
-                  You can either login or checkout as a guest.
-                </p>
-                <SignInButton mode="modal">
-                  <button
-                    className="text-white w-full font-semibold py-2 px-6 rounded-full shadow-xl bg-gradient-to-r from-yellow-500 to-yellow-600 
-                     hover:from-yellow-600 hover:to-yellow-700 hover:text-gray-900 transition-transform transform hover:scale-105 
-                     focus:outline-none focus:ring-4 focus:ring-yellow-300"
-                  >
-                    Sign In
-                  </button>
-                </SignInButton>
+                <p className="text-gray-600">Please sign in or continue as a guest to complete your order.</p>
+                <button
+                  onClick={openSignInModal}
+                  className="text-white w-full font-semibold py-2 px-6 rounded-full shadow-xl bg-gradient-to-r from-yellow-500 to-yellow-600 
+                           hover:from-yellow-600 hover:to-yellow-700 hover:text-gray-900 transition-transform transform hover:scale-105 
+                            focus:outline-none focus:ring-4 focus:ring-yellow-300"
+                >
+                  Sign In
+                </button>
                 <button
                   onClick={openModal}
                   className="w-full bg-gray-300 hover:bg-gray-400 text-black py-3 rounded-full font-semibold transition"
@@ -248,6 +253,9 @@ export default function CartComponent() {
                 </button>
               </div>
             )}
+            <SignInModal isOpen={isSignInModalOpen} onClose={closeSignInModal} />
+
+
           </div>
 
           {/* Checkout Modal */}
@@ -259,7 +267,7 @@ export default function CartComponent() {
                   onSubmit={(e) => {
                     e.preventDefault();
                     handleCheckout();
-                    closeModal(); // Close modal on successful checkout
+                    closeModal();
                   }}
                   className="space-y-4"
                 >
