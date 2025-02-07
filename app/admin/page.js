@@ -326,7 +326,7 @@ export default function AdminPage() {
                   <p><strong>Customer:</strong> {order.name}</p>
                   <p><strong>Email:</strong> {order.email}</p>
                   <p><strong>Phone:</strong> {order.userphone}</p>
-                  <p><strong>Status:</strong>
+                  <p><strong>Status: </strong>
                     <span className={order.status === 'pending' ? 'text-yellow-600' : 'text-green-600'}>
                       {order.status}
                     </span>
