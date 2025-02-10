@@ -189,7 +189,7 @@ export default function CartComponent() {
                           Rs:{item.price.toFixed(2)}
                         </p>
                         <p className="text-lg font-semibold text-yellow-500">
-                        Rs:{(item.price - (item.price * item.sale) / 100).toFixed(2)} x {item.quantity}
+                          Rs:{(item.price - (item.price * item.sale) / 100).toFixed(2)} x {item.quantity}
                         </p>
                       </>
                     ) : (

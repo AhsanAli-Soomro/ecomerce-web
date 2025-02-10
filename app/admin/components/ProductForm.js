@@ -190,7 +190,7 @@ export default function ProductForm({
                     <button
                         type="submit"
                         disabled={loading}
-                        className={`w-full bg-blue-500 text-white font-semibold py-3 rounded-md transition ${loading ? 'opacity-50 cursor-not-allowed' : 'hover:bg-blue-600'
+                        className={`w-full bg-yellow-500 hover:bg-yellow-600 text-white py-3 rounded-md font-semibold transition" ${loading ? 'opacity-50 cursor-not-allowed' : 'hover:bg-yellow-600'
                             }`}
                     >
                         {isEditing ? 'Update Product' : 'Upload Product'}

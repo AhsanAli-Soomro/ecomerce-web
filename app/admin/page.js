@@ -57,16 +57,15 @@ export default function AdminPage() {
       {/* Mobile Sidebar Toggle Button */}
       <button
         onClick={() => setSidebarOpen(!sidebarOpen)}
-        className="p-4 bg-blue-600 text-white fixed top-4 left-4 z-30 md:hidden"
+        className="text-2xl hover:cursor-pointer hover:text-gray-400 text-white fixed top-16 left-4 z-30 md:hidden"
       >
-        ☰
+        {sidebarOpen ? <span className='pl-52'>✕</span> : '☰'}
       </button>
 
       {/* Sidebar */}
       <div
-        className={`fixed top-0 left-0 w-64 bg-gray-800 text-white h-full shadow-lg transition-transform duration-300 transform ${
-          sidebarOpen ? 'translate-x-0' : '-translate-x-64'
-        } md:translate-x-0`}
+        className={`fixed top-0 left-0 w-64 bg-gray-800 text-white h-full shadow-lg transition-transform duration-300 transform ${sidebarOpen ? 'translate-x-0' : '-translate-x-64'
+          } md:translate-x-0`}
       >
         <Stepper activeStep={activeStep} setActiveStep={setActiveStep} />
       </div>

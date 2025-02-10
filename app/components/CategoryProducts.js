@@ -48,8 +48,8 @@ const CategoryProducts = ({ category }) => {
                 >
                     <div className="relative">
                         <Image
-                        width={500}
-                        height={100}
+                            width={500}
+                            height={100}
                             src={product.image}
                             alt={product.name}
                             className="w-full h-40 object-cover"
