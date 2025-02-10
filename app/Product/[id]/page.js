@@ -9,13 +9,17 @@ import CategoryProducts from '@/app/components/CategoryProducts';
 import Image from 'next/image';
 import { FiShoppingCart } from 'react-icons/fi';
 import SignInModal from '@/app/components/SignInModal';
+// import SignInModal from '@/app/components/SignInModal';
 
 export default function ProductDetails({ params }) {
   const router = useRouter();
   const { isSignedIn, isLoaded: authLoaded } = useAuth();
   const { user, isLoaded: userLoaded } = useUser();
   const { dispatch: cartDispatch } = useCart();
-
+  const openSignInModal = () => setIsSignInModalOpen(true);
+  const closeSignInModal = () => setIsSignInModalOpen(false);
+  const [isSignInModalOpen, setIsSignInModalOpen] = useState(false);
+  const [isSignUpModalOpen, setIsSignUpModalOpen] = useState(false);
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true);
   const [comment, setComment] = useState('');
@@ -348,7 +352,7 @@ export default function ProductDetails({ params }) {
           </div>
         ) : (
           <p className="text-gray-600 mt-4">
-            You must <SignInButton mode="modal">sign in</SignInButton> to post a comment.
+            You must <button onClick={openSignInModal} className="text-yellow-500 font-semibold hover:text-yellow-600 transition">sign in</button> to post a comment.
           </p>
         )}
       </div>
@@ -358,6 +362,7 @@ export default function ProductDetails({ params }) {
         </h2>
         <CategoryProducts category={product.category} />
       </div>
+      <SignInModal isOpen={isSignInModalOpen} onClose={closeSignInModal} />
     </div>
 
   );

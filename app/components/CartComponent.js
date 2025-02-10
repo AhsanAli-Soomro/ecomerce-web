@@ -6,7 +6,7 @@ import { useEffect, useState } from 'react';
 import Image from 'next/image';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import SignInModal from './SignInModal'; // Import SignIn modal
+import SignInModal from './SignInModal';
 
 export default function CartComponent() {
   const { cart, dispatch } = useCart();
