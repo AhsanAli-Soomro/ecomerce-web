@@ -2,19 +2,21 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 
+// Predefined 6-digit recovery codes
+const recoveryCodes = ['386333', '759852', '759863', '885566', '986532', '485327', '754286', '316497', '829371', '734286'];
+
 export default function AdminLogin() {
-    const [step, setStep] = useState('login'); // Track the current step: 'login' or 'update'
+    const [step, setStep] = useState('login'); // Track current step
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
-    const [newUsername, setNewUsername] = useState('');
-    const [newPassword, setNewPassword] = useState('');
+    const [recoveryCode, setRecoveryCode] = useState('');
     const [error, setError] = useState('');
-    const [success, setSuccess] = useState('');
     const router = useRouter();
 
-    // Handle Login Request
+    // Handle login request
     const handleLogin = async (e) => {
         e.preventDefault();
+        setError(''); // Clear previous errors
 
         try {
             const res = await fetch('/api/admin/login', {
@@ -25,163 +27,103 @@ export default function AdminLogin() {
 
             if (res.ok) {
                 localStorage.setItem('isAdminLoggedIn', 'true');
-                setStep('update'); // Proceed to the update step
+                router.push('/admin'); // Redirect to admin dashboard
             } else {
                 const { message } = await res.json();
                 setError(message);
             }
         } catch (error) {
             console.error(error);
-            setError('Failed to login. Please try again.');
+            setError('Login failed. Please try again.');
         }
     };
 
-    // Handle Update Request
-    const handleUpdateCredentials = async (e) => {
+    // Handle recovery code verification
+    const handleRecovery = (e) => {
         e.preventDefault();
-
-        try {
-            const res = await fetch('/api/admin/update', {
-                method: 'PUT',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    currentUsername: username,
-                    newUsername,
-                    newPassword,
-                }),
-            });
-
-            if (res.ok) {
-                setSuccess('Credentials updated successfully!');
-                localStorage.removeItem('isAdminLoggedIn'); // Logout the user
-                router.push('/adminlogin'); // Redirect to login page
-            } else {
-                const { message } = await res.json();
-                setError(message);
-            }
-        } catch (error) {
-            console.error(error);
-            setError('Failed to update credentials.');
+        if (recoveryCodes.includes(recoveryCode)) {
+            localStorage.setItem('isAdminLoggedIn', 'true'); // Set admin session
+            router.push('/admin'); // Redirect to admin dashboard
+        } else {
+            setError('Invalid recovery code.');
         }
-    };
-
-    const handleadmin = () => {
-        router.push('/admin'); // Redirect to update credentials step
     };
 
     return (
-<div className="pt-5 bg-gray-900 min-h-screen">
-  <div className="flex fixed top-32 right-10 items-center justify-end w-full gap-4">
-    <button
-      onClick={handleadmin}
-      className="mt-6 text-gray-100 py-2 px-4 rounded-xl bg-red-500 hover:bg-red-600 font-semibold transition-transform transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-red-300"
-    >
-      Admin
-    </button>
-  </div>
+        <div className="min-h-screen bg-gray-900 flex items-center justify-center p-6">
+            <div className="bg-gray-800 p-8 rounded-lg shadow-lg w-full max-w-md">
+                <h2 className="text-3xl font-bold text-gray-100 mb-6 text-center">
+                    {step === 'login' ? 'Admin Login' : 'Recovery Mode'}
+                </h2>
 
-  <div className="flex items-center justify-center py-48">
-    <div className="bg-gray-800 p-8 rounded-lg shadow-lg w-full max-w-md">
-      <h2 className="text-3xl font-extrabold mb-6 text-center text-gray-100">
-        {step === 'login' ? 'Admin Login' : 'Update Credentials'}
-      </h2>
+                {error && <p className="text-red-400 mb-4 text-center">{error}</p>}
 
-      {error && <p className="text-red-400 mb-4 text-center">{error}</p>}
-      {success && <p className="text-green-400 mb-4 text-center">{success}</p>}
+                {/* Login form */}
+                {step === 'login' && (
+                    <form onSubmit={handleLogin} className="space-y-4">
+                        <input
+                            type="text"
+                            placeholder="Username"
+                            value={username}
+                            onChange={(e) => setUsername(e.target.value)}
+                            className="w-full p-3 bg-gray-700 text-gray-300 border border-gray-600 rounded-md"
+                            required
+                        />
+                        <input
+                            type="password"
+                            placeholder="Password"
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)}
+                            className="w-full p-3 bg-gray-700 text-gray-300 border border-gray-600 rounded-md"
+                            required
+                        />
+                        <button
+                            type="submit"
+                            className="w-full bg-yellow-500 hover:bg-yellow-600 text-white py-3 rounded-md font-semibold transition"
+                        >
+                            Login
+                        </button>
+                    </form>
+                )}
 
-      {/* Step 1: Login Form */}
-      {step === 'login' && (
-        <form onSubmit={handleLogin} className="space-y-4">
-          <input
-            type="text"
-            placeholder="Username"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-            className="w-full p-3 bg-gray-700 text-gray-300 border border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-500"
-            required
-          />
-          <input
-            type="password"
-            placeholder="Password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            className="w-full p-3 bg-gray-700 text-gray-300 border border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-500"
-            required
-          />
-          <button
-            type="submit"
-            className="w-full bg-yellow-500 hover:bg-yellow-600 text-white py-3 rounded-md font-semibold transition"
-          >
-            Login
-          </button>
-        </form>
-      )}
+                {/* Recovery code form */}
+                {step === 'recovery' && (
+                    <form onSubmit={handleRecovery} className="space-y-4">
+                        <input
+                            type="text"
+                            placeholder="Enter Recovery Code"
+                            value={recoveryCode}
+                            onChange={(e) => setRecoveryCode(e.target.value)}
+                            className="w-full p-3 bg-gray-700 text-gray-300 border border-gray-600 rounded-md"
+                            required
+                        />
+                        <button
+                            type="submit"
+                            className="w-full bg-blue-500 hover:bg-blue-600 text-white py-3 rounded-md font-semibold transition"
+                        >
+                            Verify Code
+                        </button>
+                    </form>
+                )}
 
-      {/* Step 2: Update Credentials Form */}
-      {step === 'update' && (
-        <form onSubmit={handleUpdateCredentials} className="space-y-4">
-          <input
-            type="text"
-            placeholder="New Username"
-            value={newUsername}
-            onChange={(e) => setNewUsername(e.target.value)}
-            className="w-full p-3 bg-gray-700 text-gray-300 border border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-            required
-          />
-          <input
-            type="password"
-            placeholder="New Password"
-            value={newPassword}
-            onChange={(e) => setNewPassword(e.target.value)}
-            className="w-full p-3 bg-gray-700 text-gray-300 border border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-            required
-          />
-          <div className="flex space-x-4">
-            <button
-              type="submit"
-              className="w-full bg-blue-500 hover:bg-blue-600 text-white py-3 rounded-md font-semibold transition"
-            >
-              Update Credentials
-            </button>
-            <button
-              type="button"
-              onClick={() => router.push('/adminlogin')}
-              className="w-full bg-red-500 hover:bg-red-600 text-white py-3 rounded-md font-semibold transition"
-            >
-              Cancel
-            </button>
-          </div>
-        </form>
-      )}
-
-      {/* Toggle Step Links */}
-      <div className="mt-4 text-center">
-        {step === 'login' && (
-          <p className="text-sm text-gray-400">
-            Want to update credentials?{' '}
-            <button
-              onClick={() => setStep('update')}
-              className="text-blue-400 hover:underline"
-            >
-              Click here
-            </button>
-          </p>
-        )}
-        {step === 'update' && (
-          <p className="text-sm text-gray-400">
-            Want to go back to login?{' '}
-            <button
-              onClick={() => setStep('login')}
-              className="text-blue-400 hover:underline"
-            >
-              Click here
-            </button>
-          </p>
-        )}
-      </div>
-    </div>
-  </div>
-</div>
-
+                <div className="mt-4 text-center">
+                    {step === 'login' ? (
+                        <p className="text-sm text-gray-400">
+                            Forgot credentials?{' '}
+                            <button onClick={() => setStep('recovery')} className="text-blue-400 hover:underline">
+                                Click here
+                            </button>
+                        </p>
+                    ) : (
+                        <p className="text-sm text-gray-400">
+                            Remember credentials?{' '}
+                            <button onClick={() => setStep('login')} className="text-blue-400 hover:underline">
+                                Go back to login
+                            </button>
+                        </p>
+                    )}
+                </div>
+            </div>
+        </div>
     );
 }

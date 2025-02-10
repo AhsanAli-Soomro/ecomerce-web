@@ -1,5 +1,5 @@
 import React from 'react';
-import { ListBulletIcon, ShoppingBagIcon, Squares2X2Icon } from '@heroicons/react/20/solid';
+import { Cog6ToothIcon, ListBulletIcon, ShoppingBagIcon, Squares2X2Icon } from '@heroicons/react/20/solid';
 
 
 export default function Stepper({ activeStep, setActiveStep }) {
@@ -7,6 +7,7 @@ export default function Stepper({ activeStep, setActiveStep }) {
         { id: 1, label: 'Upload Product', icon:<Squares2X2Icon className='w-6 h-6'/> },
         { id: 2, label: 'Product List', icon:<ListBulletIcon className='w-6 h-6'/> },
         { id: 3, label: 'Order List', icon:<ShoppingBagIcon className='w-6 h-6'/> },
+        { id: 4, label: 'Manage Admin', icon:<Cog6ToothIcon className='w-6 h-6'/> },
     ];
 
     return (

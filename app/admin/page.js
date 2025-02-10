@@ -7,6 +7,7 @@ import Stepper from './components/Stepper';
 import ProductForm from './components/ProductForm';
 import ProductList from './components/ProductList';
 import OrderList from './components/OrderList';
+import AdminManageCredentials from './components/AdminManageCredentials';
 
 const ITEMS_PER_PAGE = 10;
 
@@ -116,6 +117,9 @@ export default function AdminPage() {
               setLoadingOrders={setLoadingOrders}
               setMessage={setMessage}
             />
+          )}         
+          {activeStep === 4 && (
+            <AdminManageCredentials />
           )}
         </div>
       </div>
