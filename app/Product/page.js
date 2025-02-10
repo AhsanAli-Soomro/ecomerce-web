@@ -127,7 +127,7 @@ export default function HomePage() {
   const toggleSubcategory = () => setSubcategoryOpen(!subcategoryOpen);
 
   return (
-    <div className="homepage-container container mx-auto py-4 sm:py-8 min-h-screen">
+    <div className="homepage-container container mx-auto px-4 py-4 sm:py-8 min-h-screen">
       <ToastContainer />
       {/* <motion.h1
     className="text-3xl sm:text-5xl font-extrabold text-center text-gray-800 mb-8 sm:mb-12 tracking-tight"

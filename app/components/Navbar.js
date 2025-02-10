@@ -7,6 +7,7 @@ import { useRouter, usePathname } from 'next/navigation';
 import Image from 'next/image';
 import SignInModal from '../sign-in/page';
 import SignUpModal from '../sign-up/page';
+import AdminNavbar from '../admin/components/AdminNavbar';
 
 export default function Navbar() {
   const { isSignedIn } = useAuth();
@@ -25,6 +26,8 @@ export default function Navbar() {
     "Limited-time offers available now!",
     "Shop smarter, not harder!"
   ];
+
+  const isAdminPage = pathname.startsWith('/admin');
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -48,84 +51,89 @@ export default function Navbar() {
   };
 
   return (
-    <div className='fixed z-20 w-full'>
-      <nav className="navbar backdrop-blur-md shadow-lg p-4">
-        <div className="container mx-auto flex justify-between items-center">
-          <h1
-            className="text-3xl font-extrabold tracking-wide   cursor-pointer hover:text-yellow-500 transition-colors"
-            onClick={() => router.push('/')}
-          >
-            <Image
-              width={200}
-              height={100}
-              src="/logo.png"
-              alt="RoyalHunt"
-            />
-          </h1>
+    <div>
+      {isAdminPage ? <AdminNavbar /> :
 
-          {/* Desktop Links */}
-          <div className="hidden md:flex items-center space-x-8">
-            <CategoryLinks categories={categories} products={products} activePath={pathname} />
-            <form onSubmit={handleSearch} className="flex items-center space-x-2">
-              <input
-                type="text"
-                placeholder="Search..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="p-2 rounded-md shadow-md border focus:outline-none focus:ring-2 focus:ring-yellow-500"
-              />
-              <button type="submit">
-                <FiSearch size={24} className="text-gray-800 hover:text-yellow-500" />
+        <div className='fixed z-20 w-full'>
+          <nav className="navbar backdrop-blur-md shadow-lg p-4">
+            <div className="container mx-auto flex justify-between items-center">
+              <h1
+                className="text-3xl font-extrabold tracking-wide   cursor-pointer hover:text-yellow-500 transition-colors"
+                onClick={() => router.push('/')}
+              >
+                <Image
+                  width={200}
+                  height={100}
+                  src="/logo.png"
+                  alt="RoyalHunt"
+                />
+              </h1>
+
+              {/* Desktop Links */}
+              <div className="hidden md:flex items-center space-x-8">
+                <CategoryLinks categories={categories} products={products} activePath={pathname} />
+                <form onSubmit={handleSearch} className="flex items-center space-x-2">
+                  <input
+                    type="text"
+                    placeholder="Search..."
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    className="p-2 rounded-md shadow-md border focus:outline-none focus:ring-2 focus:ring-yellow-500"
+                  />
+                  <button type="submit">
+                    <FiSearch size={24} className="text-gray-800 hover:text-yellow-500" />
+                  </button>
+                </form>
+                <AuthButtons isSignedIn={isSignedIn} />
+                <NavLink href="/cart" icon={<FiShoppingCart size={20} />} label="Cart" />
+              </div>
+
+              {/* Mobile Menu Icon */}
+              <button
+                className="md:hidden focus:outline-none text-gray-800"
+                onClick={() => setMenuOpen(!isMenuOpen)}
+              >
+                {isMenuOpen ? <FiX size={32} /> : <FiMenu size={32} />}
               </button>
-            </form>
-            <AuthButtons isSignedIn={isSignedIn} />
-            <NavLink href="/cart" icon={<FiShoppingCart size={20} />} label="Cart" />
-          </div>
+            </div>
 
-          {/* Mobile Menu Icon */}
-          <button
-            className="md:hidden focus:outline-none text-gray-800"
-            onClick={() => setMenuOpen(!isMenuOpen)}
-          >
-            {isMenuOpen ? <FiX size={32} /> : <FiMenu size={32} />}
-          </button>
-        </div>
+            {isMenuOpen && (
+              <div className="md:hidden mt-4 flex flex-col items-center space-y-6 animate-slide-down">
+                <NavLink href="/cart" icon={<FiShoppingCart size={24} />} label="Cart" />
+                <CategoryLinks categories={categories} products={products} activePath={pathname} />
+                <form onSubmit={handleSearch} className="flex items-center space-x-2">
+                  <input
+                    type="text"
+                    placeholder="Search..."
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    className="p-2 rounded-md shadow-md border focus:outline-none focus:ring-2 focus:ring-yellow-500"
+                  />
+                  <button type="submit">
+                    <FiSearch size={24} className="text-gray-800 hover:text-yellow-500" />
+                  </button>
+                </form>
+                <AuthButtons isSignedIn={isSignedIn} />
+              </div>
+            )}
+          </nav>
 
-        {isMenuOpen && (
-          <div className="md:hidden mt-4 flex flex-col items-center space-y-6 animate-slide-down">
-            <NavLink href="/cart" icon={<FiShoppingCart size={24} />} label="Cart" />
-            <CategoryLinks categories={categories} products={products} activePath={pathname} />
-            <form onSubmit={handleSearch} className="flex items-center space-x-2">
-              <input
-                type="text"
-                placeholder="Search..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="p-2 rounded-md shadow-md border focus:outline-none focus:ring-2 focus:ring-yellow-500"
-              />
-              <button type="submit">
-                <FiSearch size={24} className="text-gray-800 hover:text-yellow-500" />
-              </button>
-            </form>
-            <AuthButtons isSignedIn={isSignedIn} />
-          </div>
-        )}
-      </nav>
-
-      {/* Sub-navbar for Social Media Links */}
-      <div className="bg-gradient-to-r from-yellow-500 to-yellow-600 py-2">
-        <div className="container mx-auto flex justify-between items-center text-white">
-          <div className="w-1/4"></div>
-          <p className="text-center text-sm sm:text-base font-semibold">
-            {quotes[currentQuote]}
-          </p>
-          <div className="flex justify-end space-x-4 w-1/4">
-            <SocialIcon icon={<FiFacebook />} href="https://facebook.com" />
-            <SocialIcon icon={<FiTwitter />} href="https://twitter.com" />
-            <SocialIcon icon={<FiInstagram />} href="https://instagram.com" />
+          {/* Sub-navbar for Social Media Links */}
+          <div className="bg-gradient-to-r from-yellow-500 to-yellow-600 py-2">
+            <div className="container mx-auto flex justify-between items-center text-white">
+              <div className="w-1/4"></div>
+              <p className="text-center text-sm sm:text-base font-semibold">
+                {quotes[currentQuote]}
+              </p>
+              <div className="flex justify-end space-x-4 w-1/4">
+                <SocialIcon icon={<FiFacebook />} href="https://facebook.com" />
+                <SocialIcon icon={<FiTwitter />} href="https://twitter.com" />
+                <SocialIcon icon={<FiInstagram />} href="https://instagram.com" />
+              </div>
+            </div>
           </div>
         </div>
-      </div>
+      }
     </div>
   );
 }
@@ -227,18 +235,18 @@ function AuthButtons({ isSignedIn }) {
   ) : (
     <div className="flex">
       {/* <SignInButton mode="modal"> */}
-        <button onClick={openModal} className="text-gray-800 font-semibold py-2 px-6 transition-transform transform hover:scale-105">
-          Sign In
-        </button>
-        <SignInModal isOpen={isModalOpen} onClose={closeModal} />
+      <button onClick={openModal} className="text-gray-800 font-semibold py-2 px-6 transition-transform transform hover:scale-105">
+        Sign In
+      </button>
+      <SignInModal isOpen={isModalOpen} onClose={closeModal} />
       {/* </SignInButton> */}
       {/* <SignUpButton mode="modal"> */}
-        <button onClick={openSignUp} className="text-gray-800 font-semibold py-2 px-6 rounded-full shadow-xl border-yellow-500 border-2 
+      <button onClick={openSignUp} className="text-gray-800 font-semibold py-2 px-6 rounded-full shadow-xl border-yellow-500 border-2 
                            hover:border-yellow-600 hover:text-gray-900 transition-transform transform hover:scale-105 
                             focus:outline-none focus:ring-4 focus:ring-yellow-300">
-          Sign Up
-        </button>
-        <SignUpModal isOpen={isSignUpOpen} onClose={closeSignUp} />
+        Sign Up
+      </button>
+      <SignUpModal isOpen={isSignUpOpen} onClose={closeSignUp} />
       {/* </SignUpButton> */}
     </div>
   );

@@ -70,7 +70,7 @@ export default function AdminLogin() {
     };
 
     return (
-        <div className='pt-5'>
+        <div className='pt-5 bg-gray-100 h-svh'>
             <div className="flex fixed top-32 right-10 items-center justify-end w-full gap-4">
                 <button
                     onClick={handleadmin}

@@ -180,7 +180,7 @@ export default function OrderList({ orders, setOrders, loadingOrders, setLoading
                   <p className="text-gray-300"><strong>Email:</strong> {order.email}</p>
                   <p className="text-gray-300"><strong>Total Amount:</strong> Rs {order.totalAmount.toFixed(2)}</p>
                   <p>
-                    <strong>Status:</strong>{' '}
+                    <strong className="text-gray-300">Status:</strong>{' '}
                     <span
                       className={`px-3 py-1 rounded-full text-sm font-semibold ${
                         order.status === 'pending'

@@ -80,7 +80,7 @@ export default function SubcategoryPage({ params }) {
   }
 
   return (
-    <div className="container mx-auto p-6">
+    <div className="container mx-auto pt-36 p-6">
       {/* Toast Container */}
       <ToastContainer />
 

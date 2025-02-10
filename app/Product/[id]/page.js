@@ -207,7 +207,7 @@ export default function ProductDetails({ params }) {
   if (!product) return <p>Product not found</p>;
   const salePrice = product.price - (product.price * product.sale) / 100;
   return (
-    <div className="product-details-container container mx-auto p-8 min-h-screen">
+    <div className="product-details-container pt-36 container mx-auto p-8 min-h-screen">
       <ToastContainer />
       {/* Go Back Button */}
       <button

@@ -77,7 +77,7 @@ export default function CategoryPage({ params }) {
   }
 
   return (
-    <div className="container mx-auto p-8 min-h-screen">
+    <div className="container mx-auto pt-36 p-8 min-h-screen">
       {/* Toast Container */}
       <ToastContainer />
 

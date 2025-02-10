@@ -5,5 +5,9 @@ import dynamic from 'next/dynamic';
 const CartComponent = dynamic(() => import('../components/CartComponent'), { ssr: false });
 
 export default function CartPage() {
-  return <CartComponent />;
+  return (
+    <div className='pt-24'>
+      <CartComponent />;
+    </div>
+  );
 }

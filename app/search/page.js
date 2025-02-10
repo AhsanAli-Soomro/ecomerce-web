@@ -67,7 +67,7 @@ export default function SearchPage() {
   };
 
   return (
-    <div className="container mx-auto p-8 min-h-screen">
+    <div className="container mx-auto pt-36 p-8 min-h-screen">
       <ToastContainer />
 
       <h1 className="text-4xl font-bold mb-8 text-center">Search Results</h1>
