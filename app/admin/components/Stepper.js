@@ -1,6 +1,6 @@
 import React from 'react';
 
-export default function StepperSidebar({ activeStep, setActiveStep }) {
+export default function Stepper({ activeStep, setActiveStep }) {
   const steps = [
     { id: 1, label: 'Upload Product' },
     { id: 2, label: 'Product List' },

@@ -1,32 +1,38 @@
 'use client';
-import { useSearchParams } from 'next/navigation'; // Hook to get search params
+import { useSearchParams } from 'next/navigation';
 import { useProducts } from '../../contexts/ProductContext';
 import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
 import Image from 'next/image';
 import { useCart } from '@/contexts/CartContext';
-import { FiShoppingCart } from 'react-icons/fi'; // Import cart icon
-import { toast, ToastContainer } from 'react-toastify'; // Toast notifications
-import 'react-toastify/dist/ReactToastify.css'; // Toast styles
+import { FiShoppingCart } from 'react-icons/fi';
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import { useEffect, useState } from 'react';
 
 export default function SearchPage() {
-  const searchParams = useSearchParams(); // Get search query from URL
-  const query = searchParams.get('query')?.toLowerCase(); // Extract search query
-  const { products } = useProducts(); // Fetch products from context
+  const searchParams = useSearchParams();
+  const { products } = useProducts(); 
   const router = useRouter();
   const { dispatch: cartDispatch } = useCart();
+  const [query, setQuery] = useState(''); // State for search query
+  const [filteredProducts, setFilteredProducts] = useState([]); // State for filtered products
 
-  // Check if products exist to prevent errors
-  const filteredProducts = products
-    ? products.filter((product) =>
-      product.name.toLowerCase().includes(query)
-    )
-    : [];
+  // Get query from URL and update filtered products
+  useEffect(() => {
+    const searchQuery = searchParams.get('query')?.toLowerCase() || '';
+    setQuery(searchQuery);
+
+    if (products) {
+      const filtered = products.filter((product) =>
+        product.name.toLowerCase().includes(searchQuery)
+      );
+      setFilteredProducts(filtered);
+    }
+  }, [searchParams, products]);
 
   const handleAddToCart = (product) => {
     cartDispatch({ type: 'ADD_TO_CART', payload: product });
-
-    // Show toast notification
     toast.success(
       <div className="flex items-center space-x-4 p-2">
         <div className="flex-shrink-0">
@@ -35,16 +41,16 @@ export default function SearchPage() {
             height={60}
             src={product.image}
             alt={product.name}
-            className="w-16 h-16 object-cover rounded-md shadow-md hover:shadow-lg transition-shadow"
+            className="w-16 h-16 object-cover rounded-md shadow-md"
           />
         </div>
         <div className="flex flex-col">
-          <p className="text-sm sm:text-base font-medium text-gray-800">
+          <p className="text-sm font-medium text-gray-800">
             {product.name} added to your cart!
           </p>
           <a
             href="/cart"
-            className="text-yellow-600 font-semibold underline hover:text-yellow-700 transition-colors mt-1 flex items-center space-x-1"
+            className="text-yellow-600 font-semibold underline hover:text-yellow-700 mt-1 flex items-center"
           >
             <FiShoppingCart size={18} />
             <span>View Cart</span>
@@ -88,13 +94,12 @@ export default function SearchPage() {
                 className="bg-white rounded-xl shadow-lg hover:shadow-2xl transition-transform transform hover:scale-105"
               >
                 <div className="relative">
-                  {/* Product Image */}
                   <Image
                     width={500}
                     height={100}
                     src={product.image}
                     alt={product.name}
-                    className="product-image w-full h-60 object-cover rounded-t-xl cursor-pointer hover:opacity-90 transition-opacity"
+                    className="product-image w-full h-60 object-cover rounded-t-xl cursor-pointer hover:opacity-90"
                     onClick={() => handleProductClick(product._id)}
                   />
                   {product.sale > 0 && (
@@ -104,7 +109,7 @@ export default function SearchPage() {
                   )}
                 </div>
                 <div className="px-4 sm:px-6">
-                  <h2 className="text-xl sm:text-2xl font-bold mt-4 text-gray-800 tracking-tight">
+                  <h2 className="text-xl sm:text-2xl font-bold mt-4 text-gray-800">
                     {product.name}
                   </h2>
                   <p className="text-gray-500">
@@ -131,9 +136,7 @@ export default function SearchPage() {
 
                 <button
                   onClick={() => handleAddToCart(product)}
-                  className="text-white w-full mt-6 font-semibold py-3 px-8 rounded-b-lg shadow-lg bg-gradient-to-r from-yellow-500 to-yellow-600 
-                             hover:from-yellow-600 hover:to-yellow-700 hover:text-gray-900 transition-transform transform hover:scale-105 
-                             focus:outline-none focus:ring-4 focus:ring-yellow-300"
+                  className="text-white w-full mt-6 font-semibold py-3 px-8 rounded-b-lg bg-gradient-to-r from-yellow-500 to-yellow-600 hover:from-yellow-600 hover:to-yellow-700"
                 >
                   Add to Cart
                 </button>
@@ -145,4 +148,3 @@ export default function SearchPage() {
     </div>
   );
 }
-
