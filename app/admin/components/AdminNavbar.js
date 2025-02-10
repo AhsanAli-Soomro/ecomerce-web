@@ -44,12 +44,6 @@ export default function AdminNavbar({ handleLogout, handleChangePassword }) {
                         Home
                     </a>
                     <button
-                        onClick={handleChangePassword}
-                        className="text-yellow-400 hover:text-white font-semibold transition"
-                    >
-                        Change Password
-                    </button>
-                    <button
                         onClick={handleLogout}
                         className="bg-red-600 hover:bg-red-500 text-white px-4 py-2 rounded-md font-semibold transition"
                     >
@@ -75,15 +69,6 @@ export default function AdminNavbar({ handleLogout, handleChangePassword }) {
                     >
                         Home
                     </a>
-                    <button
-                        onClick={() => {
-                            handleChangePassword();
-                            setIsMenuOpen(false);
-                        }}
-                        className="block text-gray-300 hover:text-yellow-400 font-semibold transition"
-                    >
-                        Change Password
-                    </button>
                     <button
                         onClick={() => {
                             handleLogout();
