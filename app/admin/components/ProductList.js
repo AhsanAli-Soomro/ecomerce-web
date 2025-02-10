@@ -82,7 +82,7 @@ export default function ProductList({
 
             {/* Pagination Controls */}
             {products.length > 0 && (
-                <div className="flex justify-center mt-6 space-x-4">
+                <div className="flex justify-center items-center mt-6 space-x-4">
                     <button
                         onClick={handlePreviousPage}
                         disabled={currentPage === 1}

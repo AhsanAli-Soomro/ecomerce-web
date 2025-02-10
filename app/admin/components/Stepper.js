@@ -18,8 +18,8 @@ export default function Stepper({ activeStep, setActiveStep }) {
                         <button
                             onClick={() => setActiveStep(step.id)}
                             className={`w-full py-3 px-4 text-left text-lg font-semibold transition ${activeStep === step.id
-                                ? 'bg-yellow-600'
-                                : 'hover:bg-yellow-500 hover:text-white'
+                                ? 'bg-yellow-500'
+                                : 'hover:bg-yellow-600 hover:text-white'
                                 }`}
                         >
                             <div className='flex items-center gap-2'>
