@@ -290,15 +290,15 @@ export default function HomePage() {
                     {product.sale > 0 ? (
                       <>
                         <p className="text-gray-400 line-through">
-                          ${product.price ? product.price.toFixed(2) : '0.00'}
+                          Rs:{product.price ? product.price.toFixed(2) : '0.00'}
                         </p>
                         <p className="text-lg font-semibold text-yellow-500">
-                          ${salePrice.toFixed(2)}
+                          Rs:{salePrice.toFixed(2)}
                         </p>
                       </>
                     ) : (
                       <p className="text-lg font-semibold text-gray-800">
-                        ${product.price ? product.price.toFixed(2) : '0.00'}
+                        Rs:{product.price ? product.price.toFixed(2) : '0.00'}
                       </p>
                     )}
                   </div>

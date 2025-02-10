@@ -186,15 +186,15 @@ export default function CartComponent() {
                     {item.sale > 0 ? (
                       <>
                         <p className="text-gray-400 line-through">
-                          ${item.price.toFixed(2)}
+                          Rs:{item.price.toFixed(2)}
                         </p>
                         <p className="text-lg font-semibold text-yellow-500">
-                          ${(item.price - (item.price * item.sale) / 100).toFixed(2)} x {item.quantity}
+                        Rs:{(item.price - (item.price * item.sale) / 100).toFixed(2)} x {item.quantity}
                         </p>
                       </>
                     ) : (
                       <p className="text-lg font-semibold text-gray-800">
-                        ${item.price.toFixed(2)} x {item.quantity}
+                        Rs:{item.price.toFixed(2)} x {item.quantity}
                       </p>
                     )}
 
@@ -219,7 +219,7 @@ export default function CartComponent() {
           ))}
 
           <p className="text-xl font-semibold text-right">
-            Total Amount: ${calculateTotalAmount().toFixed(2)}
+            Total Amount: Rs:{calculateTotalAmount().toFixed(2)}
           </p>
 
 

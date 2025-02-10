@@ -244,15 +244,15 @@ export default function ProductDetails({ params }) {
               {product.sale > 0 ? (
                 <>
                   <p className="text-gray-400 line-through">
-                    ${product.price.toFixed(2)}
+                    Rs:{product.price.toFixed(2)}
                   </p>
                   <p className="text-lg font-semibold text-yellow-500">
-                    ${salePrice.toFixed(2)}
+                    Rs:{salePrice.toFixed(2)}
                   </p>
                 </>
               ) : (
                 <p className="text-lg font-semibold text-gray-800">
-                  ${product.price.toFixed(2)}
+                  Rs:{product.price.toFixed(2)}
                 </p>
               )}
             </div>
