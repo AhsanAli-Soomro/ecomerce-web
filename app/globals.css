@@ -44,6 +44,23 @@
   .animate-fade-in {
     animation: fade-in 0.3s ease-out;
   }
+
+  /* Hide scrollbar for Chrome, Safari, and Edge */
+::-webkit-scrollbar {
+  display: none;
+}
+
+/* Hide scrollbar for Firefox */
+.scroll-container {
+  scrollbar-width: none;
+}
+
+/* Ensure scrolling is functional */
+.scroll-container {
+  -ms-overflow-style: none; /* Hide scrollbar on IE and Edge */
+  overflow-y: auto; /* Enable scrolling */
+}
+
   
   
   
