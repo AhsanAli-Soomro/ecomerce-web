@@ -78,6 +78,7 @@ export default function Navbar() {
                 <FiSearch size={24} className="text-gray-800 hover:text-yellow-500" />
               </button>
             </form>
+
             <AuthButtons isSignedIn={isSignedIn} />
             <NavLink href="/cart" icon={<FiShoppingCart size={20} />} label="Cart" />
           </div>
@@ -227,18 +228,18 @@ function AuthButtons({ isSignedIn }) {
   ) : (
     <div className="flex">
       {/* <SignInButton mode="modal"> */}
-        <button onClick={openModal} className="text-gray-800 font-semibold py-2 px-6 transition-transform transform hover:scale-105">
-          Sign In
-        </button>
-        <SignInModal isOpen={isModalOpen} onClose={closeModal} />
+      <button onClick={openModal} className="text-gray-800 font-semibold py-2 px-6 transition-transform transform hover:scale-105">
+        Sign In
+      </button>
+      <SignInModal isOpen={isModalOpen} onClose={closeModal} />
       {/* </SignInButton> */}
       {/* <SignUpButton mode="modal"> */}
-        <button onClick={openSignUp} className="text-gray-800 font-semibold py-2 px-6 rounded-full shadow-xl border-yellow-500 border-2 
+      <button onClick={openSignUp} className="text-gray-800 font-semibold py-2 px-6 rounded-full shadow-xl border-yellow-500 border-2 
                            hover:border-yellow-600 hover:text-gray-900 transition-transform transform hover:scale-105 
                             focus:outline-none focus:ring-4 focus:ring-yellow-300">
-          Sign Up
-        </button>
-        <SignUpModal isOpen={isSignUpOpen} onClose={closeSignUp} />
+        Sign Up
+      </button>
+      <SignUpModal isOpen={isSignUpOpen} onClose={closeSignUp} />
       {/* </SignUpButton> */}
     </div>
   );
