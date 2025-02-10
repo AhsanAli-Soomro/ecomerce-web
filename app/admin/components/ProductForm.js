@@ -73,7 +73,7 @@ export default function ProductForm({
     };
 
     return (
-        <div className="bg-gray-700 p-8 shadow-md rounded-md">
+        <div className="bg-gray-800 mt-16 p-8 shadow-md rounded-md">
             <h1 className="text-3xl font-extrabold mb-8 text-center text-gray-50">
                 {isEditing ? 'Edit Product' : 'Upload Product'}
             </h1>

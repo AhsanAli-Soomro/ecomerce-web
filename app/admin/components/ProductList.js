@@ -22,7 +22,7 @@ export default function ProductList({
     };
 
     return (
-        <div className="p-8 shadow-md rounded-lg">
+        <div className="p-8 bg-gray-800 mt-16 shadow-md rounded-lg">
             <h2 className="text-3xl font-extrabold mb-8 text-center text-gray-50">Product List</h2>
 
             {products.length === 0 ? (
@@ -32,7 +32,7 @@ export default function ProductList({
                     {products.map((product) => (
                         <li
                             key={product._id}
-                            className="flex items-center justify-between bg-gray-800 p-4 rounded-lg shadow-sm hover:shadow-lg transition-shadow"
+                            className="flex items-center justify-between bg-gray-700 p-4 rounded-lg shadow-sm hover:shadow-lg transition-shadow"
                         >
                             {/* Product Info Section */}
                             <div className="flex items-start space-x-4">

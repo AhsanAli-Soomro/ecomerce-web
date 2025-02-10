@@ -102,7 +102,7 @@ export default function AdminManageCredentials() {
     };
 
     return (
-        <div className="p-8 bg-gray-800 rounded-md shadow-lg">
+        <div className="p-8 bg-gray-800 mt-16 rounded-md shadow-lg">
             <h2 className="text-3xl font-bold text-gray-100 mb-6">{editMode ? 'Edit Admin' : 'Manage Admin Credentials'}</h2>
 
             {successMessage && <p className="text-green-400 mb-4">{successMessage}</p>}

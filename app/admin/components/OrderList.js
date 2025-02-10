@@ -93,7 +93,7 @@ export default function OrderList({ orders, setOrders, loadingOrders, setLoading
     };
 
     return (
-        <div className="max-w-7xl mx-auto p-8 min-h-screen">
+        <div className="bg-gray-800 mt-16 p-8 shadow-md rounded-md">
             <h1 className="text-3xl font-extrabold mb-8 text-center text-gray-100">Manage Orders</h1>
 
             {/* Filter Buttons */}
@@ -168,7 +168,7 @@ export default function OrderList({ orders, setOrders, loadingOrders, setLoading
             ) : (
                 <ul className="space-y-6">
                     {orders.map((order) => (
-                        <li key={order._id} className="bg-gray-800 p-6 rounded-lg shadow-md">
+                        <li key={order._id} className="bg-gray-700 p-6 rounded-lg shadow-md">
                             <div className="mb-4">
                                 <p className="text-lg font-semibold text-gray-100">
                                     <strong>Order ID:</strong> {order.orderId}
